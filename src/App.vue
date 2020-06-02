@@ -116,6 +116,8 @@
       <input id="handleHoleSpacing" v-model="handleHoleSpacing" type="text" :disabled="!hasHandles" />
     </fieldset>
 
+    <button v-on:click="downloadDxf()">Download DXF</button>
+
     <div>
       <h2>Front Panel</h2>
       <p>{{ frontPanelWidth }} W x {{ frontPanelHeight }} L x {{ frontPanelThickness }} T</p>
@@ -227,117 +229,154 @@
 </template>
 
 <script>
-export default {
-  name: 'App',
-  data: function() {
-    return {
-      frontPanelWidth: 19,
-      frontPanelHeight: 1.75 - (1 / 32),
-      frontFullRails: false,
-      frontPartialRailWidth: 2,
-      rearFullRails: false,
-      rearPartialRailWidth: 2,
-      width: 17,
-      height: (1 + (3 / 4)) - (1 / 32),
-      depth: 12,
-      frontPanelThickness: 1 / 8,
-      rearPanelThickness: 1 / 16,
-      sideThickness: 1 / 16,
-      topThickness: 1 / 16,
-      bottomThickness: 1 / 16,
-      angleVerticalLeg: 1 / 2,
-      angleHorizontalLeg: 1 / 2,
-      angleThickness: 1 / 16,
-      verticalAngleLeg: 1 / 2,
-      verticalAngleThickness: 1 / 16,
-      screwFreeFitDiameter: 1 / 8,
-      pemDiameter: 1 / 4,
-      hasHandles: false,
-      handleHoleDiameter: 1 / 16,
-      handleHoleSpacing: 1 + (1 / 4),
-    };
-  },
-  computed: {
-    frontPanelEdgeToHole: function() {
-      return this.sideEdgeToHole + ((this.frontPanelHeight - this.height) / 2);
+  import DxfDocument from './DxfDocument';
+  import DxfBlock from './DxfBlock';
+
+  export default {
+    name: 'App',
+    data: function () {
+      return {
+        frontPanelWidth: 19,
+        frontPanelHeight: 1.75 - (1 / 32),
+        frontFullRails: false,
+        frontPartialRailWidth: 2,
+        rearFullRails: false,
+        rearPartialRailWidth: 2,
+        width: 17,
+        height: (1 + (3 / 4)) - (1 / 32),
+        depth: 12,
+        frontPanelThickness: 1 / 8,
+        rearPanelThickness: 1 / 16,
+        sideThickness: 1 / 16,
+        topThickness: 1 / 16,
+        bottomThickness: 1 / 16,
+        angleVerticalLeg: 1 / 2,
+        angleHorizontalLeg: 1 / 2,
+        angleThickness: 1 / 16,
+        verticalAngleLeg: 1 / 2,
+        verticalAngleThickness: 1 / 16,
+        screwFreeFitDiameter: 1 / 8,
+        pemDiameter: 1 / 4,
+        hasHandles: false,
+        handleHoleDiameter: 1 / 16,
+        handleHoleSpacing: 1 + (1 / 4),
+      };
     },
-    frontPanelEdgeToCornerHole: function() {
-      return this.hasHandles ? (this.frontPanelHeight - this.handleHoleSpacing) / 2 : this.frontPanelEdgeToHole;
+    computed: {
+      frontPanelEdgeToHole: function () {
+        return this.sideEdgeToHole + ((this.frontPanelHeight - this.height) / 2);
+      },
+      frontPanelEdgeToCornerHole: function () {
+        return this.hasHandles ? (this.frontPanelHeight - this.handleHoleSpacing) / 2 : this.frontPanelEdgeToHole;
+      },
+      cornerHoleWidth: function () {
+        return this.rearPanelWidth - (2 * (this.verticalAngleThickness + (this.verticalAngleLeg / 2)));
+      },
+      frontPanelEndToCornerHole: function () {
+        return (this.frontPanelWidth - this.cornerHoleWidth) / 2;
+      },
+      sideDepth: function () {
+        return this.depth - this.frontPanelThickness;
+      },
+      sideEdgeToHole: function () {
+        return this.topThickness + this.angleThickness + (this.angleVerticalLeg / 2);
+      },
+      sideEndToFrontCornerHole: function () {
+        return this.sideRailEndToFrontCornerHole;
+      },
+      sideEndToRearCornerHole: function () {
+        return this.sideRailEndToRearCornerHole + this.rearPanelThickness;
+      },
+      rearPanelWidth: function () {
+        return this.width - (2 * this.sideThickness);
+      },
+      rearPanelEdgeToHole: function () {
+        return this.sideEdgeToHole;
+      },
+      rearPanelEndToCornerHole: function () {
+        return (this.rearPanelWidth - this.cornerHoleWidth) / 2;
+      },
+      topWidth: function () {
+        return this.rearPanelWidth;
+      },
+      topDepth: function () {
+        return this.depth - (this.frontPanelThickness + this.rearPanelThickness);
+      },
+      bottomWidth: function () {
+        return this.rearPanelWidth;
+      },
+      bottomDepth: function () {
+        return this.topDepth;
+      },
+      sideRailDepth: function () {
+        return this.topDepth;
+      },
+      frontRailWidth: function () {
+        return this.frontFullRails ? this.rearPanelWidth : this.frontPartialRailWidth;
+      },
+      rearRailWidth: function () {
+        return this.rearFullRails ? this.rearPanelWidth : this.rearPartialRailWidth;
+      },
+      sideRailEndToFrontCornerHole: function () {
+        return (this.verticalAngleLeg / 2) + (this.frontFullRails ? this.angleThickness : 0);
+      },
+      sideRailEndToRearCornerHole: function () {
+        return (this.verticalAngleLeg / 2) + (this.rearFullRails ? this.angleThickness : 0);
+      },
+      cornerBracketLength: function () {
+        return this.height - (2 * (this.topThickness + this.bottomThickness + this.angleThickness));
+      },
+      frontRailEndToCornerHole: function () {
+        return (this.verticalAngleLeg / 2) + (this.frontFullRails ? this.angleThickness : 0);
+      },
+      rearRailEndToCornerHole: function () {
+        return (this.verticalAngleLeg / 2) + (this.rearFullRails ? this.angleThickness : 0);
+      },
+      frontRailEdgeToCornerHole: function () {
+        return this.hasHandles ? ((this.height - (this.topThickness + this.bottomThickness)) - this.handleHoleSpacing) / 2 : this.verticalAngleLeg / 2;
+      },
+      frontCornerBracketEndToHole: function () {
+        return this.frontRailEdgeToCornerHole - this.angleThickness;
+      },
+      cornerBracketEndToHole: function () {
+        return (this.verticalAngleLeg / 2) - this.angleThickness;
+      },
     },
-    cornerHoleWidth: function() {
-      return this.rearPanelWidth - (2 * (this.verticalAngleThickness + (this.verticalAngleLeg / 2)));
-    },
-    frontPanelEndToCornerHole: function() {
-      return (this.frontPanelWidth - this.cornerHoleWidth) / 2;
-    },
-    sideDepth: function() {
-      return this.depth - this.frontPanelThickness;
-    },
-    sideEdgeToHole: function() {
-      return this.topThickness + this.angleThickness + (this.angleVerticalLeg / 2);
-    },
-    sideEndToFrontCornerHole: function() {
-      return this.sideRailEndToFrontCornerHole;
-    },
-    sideEndToRearCornerHole: function() {
-      return this.sideRailEndToRearCornerHole + this.rearPanelThickness;
-    },
-    rearPanelWidth: function() {
-      return this.width - (2 * this.sideThickness);
-    },
-    rearPanelEdgeToHole: function() {
-      return this.sideEdgeToHole;
-    },
-    rearPanelEndToCornerHole: function() {
-      return (this.rearPanelWidth - this.cornerHoleWidth) / 2;
-    },
-    topWidth: function() {
-      return this.rearPanelWidth;
-    },
-    topDepth: function() {
-      return this.depth - (this.frontPanelThickness + this.rearPanelThickness);
-    },
-    bottomWidth: function() {
-      return this.rearPanelWidth;
-    },
-    bottomDepth: function() {
-      return this.topDepth;
-    },
-    sideRailDepth: function() {
-      return this.topDepth;
-    },
-    frontRailWidth: function() {
-      return this.frontFullRails ? this.rearPanelWidth : this.frontPartialRailWidth;
-    },
-    rearRailWidth: function() {
-      return this.rearFullRails ? this.rearPanelWidth : this.rearPartialRailWidth;
-    },
-    sideRailEndToFrontCornerHole: function() {
-      return (this.verticalAngleLeg / 2) + (this.frontFullRails ? this.angleThickness : 0);
-    },
-    sideRailEndToRearCornerHole: function() {
-      return (this.verticalAngleLeg / 2) + (this.rearFullRails ? this.angleThickness : 0);
-    },
-    cornerBracketLength: function() {
-      return this.height - (2 * (this.topThickness + this.bottomThickness + this.angleThickness));
-    },
-    frontRailEndToCornerHole: function() {
-      return (this.verticalAngleLeg / 2) + (this.frontFullRails ? this.angleThickness : 0);
-    },
-    rearRailEndToCornerHole: function() {
-      return (this.verticalAngleLeg / 2) + (this.rearFullRails ? this.angleThickness : 0);
-    },
-    frontRailEdgeToCornerHole: function() {
-      return this.hasHandles ? ((this.height - (this.topThickness + this.bottomThickness)) - this.handleHoleSpacing) / 2 : this.verticalAngleLeg / 2;
-    },
-    frontCornerBracketEndToHole: function() {
-      return this.frontRailEdgeToCornerHole - this.angleThickness;
-    },
-    cornerBracketEndToHole: function() {
-      return (this.verticalAngleLeg / 2) - this.angleThickness;
-    },
+    methods: {
+      downloadDxf: function () {
+        const document = new DxfDocument();
+
+        // Top
+        const topBlock = new DxfBlock('top');
+        topBlock.addRectangle(this.topWidth, this.topDepth);
+        document.addBlock(topBlock);
+        document.addBlockReference('top', 0, this.angleVerticalLeg + 1 + this.frontPanelHeight + 1, 'outlines');
+
+        // // Top front rail
+        // firstBlock.addRectangle(0, this.frontPanelHeight + 1, this.frontRailWidth, this.angleVerticalLeg);
+        // // Front panel
+        // firstBlock.addRectangle(0, 0, this.frontPanelWidth, this.frontPanelHeight);
+        // // Bottom front rail
+        // firstBlock.addRectangle(0, -(this.angleHorizontalLeg + 1), this.frontRailWidth, this.angleHorizontalLeg);
+        // // Bottom
+        // firstBlock.addRectangle(0, -(this.bottomDepth + 1 + this.angleHorizontalLeg + 1), this.bottomWidth, this.bottomDepth);
+        // // Rear panel
+        // firstBlock.addRectangle(0, -(this.height + 1 + this.bottomDepth + 1 + this.angleHorizontalLeg + 1), this.rearPanelWidth, this.height);
+
+        console.log(document.toString());
+        this.downloadText('drawing.dxf', document.toString());
+      },
+      downloadText: function (filename, text) {
+        const link = document.createElement('a');
+        link.setAttribute('href', 'data:application/dxf;charset=utf-8,' + encodeURIComponent(text));
+        link.setAttribute('download', filename);
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
   }
-}
 </script>
 
 <style>
