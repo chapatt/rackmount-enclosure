@@ -44,24 +44,31 @@ export default class Dxf {
 
   addLine(x1, y1, x2, y2, layer) {
     this.addTag(0, 'LINE');
-    if (layer) {
-      this.addTag(8, layer);
-    }
     this.addTag(10, x1);
     this.addTag(20, y1);
     this.addTag(30, 0);
     this.addTag(11, x2);
     this.addTag(21, y2);
     this.addTag(31, 0);
+    layer && this.addTag(8, layer);
   }
 
-  addBlockReference(name, x, y, layer='0') {
+  addBlockReference(name, x, y, layer) {
     this.addTag(0, 'INSERT');
     this.addTag(2, name);
     this.addTag(10, x);
     this.addTag(20, y);
     this.addTag(30, 0);
     this.addTag(8, layer);
+    layer && this.addTag(8, layer);
+  }
+
+  addCircle(x, y, radius, layer) {
+    this.addTag(0, 'CIRCLE');
+    this.addTag(10, x);
+    this.addTag(20, y);
+    this.addTag(40, radius);
+    layer && this.addTag(8, layer);
   }
 
   toString() {

@@ -7,7 +7,6 @@ export default class DxfDocument extends DxfEntitiesMixin(Object) {
 
     this.blocks = [];
     this.blockReferences = [];
-    this.lines = [];
   }
 
   toString() {
@@ -22,7 +21,10 @@ export default class DxfDocument extends DxfEntitiesMixin(Object) {
       this.lines.forEach(({ x1, y1, x2, y2, layer }) => {
         dxf.addLine(x1, y1, x2, y2, layer);
       });
-      this.blockReferences.forEach(({ name, x, y, layer }) => {
+    this.circles.forEach(({ x, y, radius, layer }) => {
+      dxf.addCircle(x, y, radius, layer);
+    });
+    this.blockReferences.forEach(({ name, x, y, layer }) => {
         dxf.addBlockReference(name, x, y, layer);
       });
     dxf.endSection(); // ENTITIES

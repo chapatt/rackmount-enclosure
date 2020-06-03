@@ -6,7 +6,6 @@ export default class DxfBlock extends DxfEntitiesMixin(Object) {
     super();
 
     this.name = name;
-    this.lines = [];
   }
 
   toString() {
@@ -17,7 +16,10 @@ export default class DxfBlock extends DxfEntitiesMixin(Object) {
         this.lines.forEach(({ x1, y1, x2, y2 }) => {
           dxf.addLine(x1, y1, x2, y2);
         });
-      dxf.endSection(); // ENTITIES
+        this.circles.forEach(({ x, y, radius, layer }) => {
+          dxf.addCircle(x, y, radius, layer);
+        });
+    dxf.endSection(); // ENTITIES
     dxf.endBlock(); // BLOCK
 
     return dxf.toString();

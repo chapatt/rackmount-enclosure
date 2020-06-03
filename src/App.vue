@@ -352,18 +352,41 @@
         document.addBlock(topBlock);
         document.addBlockReference('top', 0, this.angleVerticalLeg + 1 + this.frontPanelHeight + 1, 'outlines');
 
-        // // Top front rail
-        // firstBlock.addRectangle(0, this.frontPanelHeight + 1, this.frontRailWidth, this.angleVerticalLeg);
-        // // Front panel
-        // firstBlock.addRectangle(0, 0, this.frontPanelWidth, this.frontPanelHeight);
-        // // Bottom front rail
-        // firstBlock.addRectangle(0, -(this.angleHorizontalLeg + 1), this.frontRailWidth, this.angleHorizontalLeg);
-        // // Bottom
-        // firstBlock.addRectangle(0, -(this.bottomDepth + 1 + this.angleHorizontalLeg + 1), this.bottomWidth, this.bottomDepth);
-        // // Rear panel
-        // firstBlock.addRectangle(0, -(this.height + 1 + this.bottomDepth + 1 + this.angleHorizontalLeg + 1), this.rearPanelWidth, this.height);
+        // Top front rail
+        const topFrontRailBlock = new DxfBlock('top_front_rail');
+        topFrontRailBlock.addRectangle(this.frontRailWidth, this.angleVerticalLeg);
+        document.addBlock(topFrontRailBlock);
+        document.addBlockReference('top_front_rail', 0, this.frontPanelHeight + 1, 'outlines');
 
-        console.log(document.toString());
+        // Front panel
+        const frontPanelBlock = new DxfBlock('front_panel');
+        frontPanelBlock.addRectangle(this.frontPanelWidth, this.frontPanelHeight);
+        frontPanelBlock.addCircle(this.frontPanelEndToCornerHole, this.frontPanelEdgeToCornerHole, (this.hasHandles ? this.handleHoleDiameter : this.screwFreeFitDiameter) / 2);
+        frontPanelBlock.addCircle(this.frontPanelEndToCornerHole, this.frontPanelHeight - this.frontPanelEdgeToCornerHole, (this.hasHandles ? this.handleHoleDiameter : this.screwFreeFitDiameter) / 2);
+        frontPanelBlock.addCircle(this.frontPanelWidth - this.frontPanelEndToCornerHole, this.frontPanelEdgeToCornerHole, (this.hasHandles ? this.handleHoleDiameter : this.screwFreeFitDiameter) / 2);
+        frontPanelBlock.addCircle(this.frontPanelWidth - this.frontPanelEndToCornerHole, this.frontPanelHeight - this.frontPanelEdgeToCornerHole, (this.hasHandles ? this.handleHoleDiameter : this.screwFreeFitDiameter) / 2);
+        document.addBlock(frontPanelBlock);
+        document.addBlockReference('front_panel', 0, 0, 'outlines');
+
+        // Bottom front rail
+        const bottomFrontRailBlock = new DxfBlock('bottom_front_rail');
+        bottomFrontRailBlock.addRectangle(this.frontRailWidth, this.angleHorizontalLeg);
+        document.addBlock(bottomFrontRailBlock);
+        document.addBlockReference('bottom_front_rail', 0, -(this.angleHorizontalLeg + 1), 'outlines');
+
+        // Bottom
+        const bottomBlock = new DxfBlock('bottom');
+        bottomBlock.addRectangle(this.bottomWidth, this.bottomDepth);
+        document.addBlock(bottomBlock);
+        document.addBlockReference('bottom', 0, -(this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+
+        // Rear panel
+        const rearPanelBlock = new DxfBlock('rear_panel');
+        rearPanelBlock.addRectangle(this.rearPanelWidth, this.height);
+        document.addBlock(rearPanelBlock);
+        document.addBlockReference('rear_panel', 0, -(this.height + 1 + this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+
+                console.log(document.toString());
         this.downloadText('drawing.dxf', document.toString());
       },
       downloadText: function (filename, text) {
