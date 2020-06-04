@@ -2,9 +2,10 @@ import Dxf from './Dxf';
 import DxfEntitiesMixin from './DxfEntitiesMixin';
 
 export default class DxfDocument extends DxfEntitiesMixin(Object) {
-  constructor() {
+  constructor(units=null) {
     super();
 
+    this.units = units; // English or Metric
     this.blocks = [];
     this.blockReferences = [];
   }
@@ -12,19 +13,31 @@ export default class DxfDocument extends DxfEntitiesMixin(Object) {
   toString() {
     let dxf = new Dxf();
 
+    dxf.beginSection('HEADER');
+      dxf.addTag(9, '$MEASUREMENT');
+      dxf.addTag(70, this.units === 'English' ? 0 : 1);
+      dxf.addTag(9, '$DIMASZ');
+      dxf.addTag(40, 0.125);
+      dxf.addTag(9, '$DIMAUNIT');
+      dxf.addTag(70, 0);
+      dxf.addTag(9, '$DIMEXO');
+      dxf.addTag(40, 0.0625);
+      dxf.addTag(9, '$DIMEXE');
+      dxf.addTag(40, 0.25);
+      dxf.addTag(9, '$DIMTXT');
+      dxf.addTag(40, 0.125);
+    dxf.endSection(); // HEADER
+
     dxf.beginSection('BLOCKS');
       this.blocks.forEach((block) => {
         dxf.addRaw(block.toString());
       });
     dxf.endSection(); // BLOCKS
     dxf.beginSection('ENTITIES');
-      this.lines.forEach(({ x1, y1, x2, y2, layer }) => {
-        dxf.addLine(x1, y1, x2, y2, layer);
-      });
-    this.circles.forEach(({ x, y, radius, layer }) => {
-      dxf.addCircle(x, y, radius, layer);
-    });
-    this.blockReferences.forEach(({ name, x, y, layer }) => {
+      this._insertLines(dxf);
+      this._insertCircles(dxf);
+      this._insertDimensions(dxf);
+      this.blockReferences.forEach(({ name, x, y, layer }) => {
         dxf.addBlockReference(name, x, y, layer);
       });
     dxf.endSection(); // ENTITIES

@@ -71,6 +71,24 @@ export default class Dxf {
     layer && this.addTag(8, layer);
   }
 
+  addAlignedDimension(x1, y1, x2, y2, extX, extY, textX, textY, layer) {
+    this.addTag(0, 'DIMENSION');
+    this.addTag(70, 1);
+    this.addTag(13, x1);
+    this.addTag(23, y1);
+    this.addTag(33, 0);
+    this.addTag(14, x2);
+    this.addTag(24, y2);
+    this.addTag(34, 0);
+    this.addTag(10, extX);
+    this.addTag(20, extY);
+    this.addTag(30, 0);
+    this.addTag(11, textX);
+    this.addTag(21, textY);
+    this.addTag(31, 0);
+    layer && this.addTag(8, layer);
+  }
+
   toString() {
     return this.data;
   }

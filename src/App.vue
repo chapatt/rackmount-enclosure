@@ -344,7 +344,7 @@
     },
     methods: {
       downloadDxf: function () {
-        const document = new DxfDocument();
+        const document = new DxfDocument('English');
 
         // Top
         const topBlock = new DxfBlock('top');
@@ -361,6 +361,8 @@
         // Front panel
         const frontPanelBlock = new DxfBlock('front_panel');
         frontPanelBlock.addRectangle(this.frontPanelWidth, this.frontPanelHeight);
+        frontPanelBlock.addSimpleAlignedDimension(0, 0, 0, this.frontPanelHeight, 'left');
+        frontPanelBlock.addSimpleAlignedDimension(0, this.frontPanelHeight, this.frontPanelWidth, this.frontPanelHeight, 'up');
         frontPanelBlock.addCircle(this.frontPanelEndToCornerHole, this.frontPanelEdgeToCornerHole, (this.hasHandles ? this.handleHoleDiameter : this.screwFreeFitDiameter) / 2);
         frontPanelBlock.addCircle(this.frontPanelEndToCornerHole, this.frontPanelHeight - this.frontPanelEdgeToCornerHole, (this.hasHandles ? this.handleHoleDiameter : this.screwFreeFitDiameter) / 2);
         frontPanelBlock.addCircle(this.frontPanelWidth - this.frontPanelEndToCornerHole, this.frontPanelEdgeToCornerHole, (this.hasHandles ? this.handleHoleDiameter : this.screwFreeFitDiameter) / 2);

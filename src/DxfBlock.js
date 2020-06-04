@@ -13,13 +13,10 @@ export default class DxfBlock extends DxfEntitiesMixin(Object) {
 
     dxf.beginBlock(this.name);
       dxf.beginSection('ENTITIES');
-        this.lines.forEach(({ x1, y1, x2, y2 }) => {
-          dxf.addLine(x1, y1, x2, y2);
-        });
-        this.circles.forEach(({ x, y, radius, layer }) => {
-          dxf.addCircle(x, y, radius, layer);
-        });
-    dxf.endSection(); // ENTITIES
+        this._insertLines(dxf);
+        this._insertCircles(dxf);
+        this._insertDimensions(dxf);
+      dxf.endSection(); // ENTITIES
     dxf.endBlock(); // BLOCK
 
     return dxf.toString();
