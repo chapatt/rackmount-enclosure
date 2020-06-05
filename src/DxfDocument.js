@@ -26,6 +26,8 @@ export default class DxfDocument extends DxfEntitiesMixin(Object) {
       dxf.addTag(40, 0.25);
       dxf.addTag(9, '$DIMTXT');
       dxf.addTag(40, 0.125);
+      dxf.addTag(9, '$DIMGAP');
+      dxf.addTag(40, 0.0625);
     dxf.endSection(); // HEADER
 
     dxf.beginSection('BLOCKS');
@@ -34,9 +36,7 @@ export default class DxfDocument extends DxfEntitiesMixin(Object) {
       });
     dxf.endSection(); // BLOCKS
     dxf.beginSection('ENTITIES');
-      this._insertLines(dxf);
-      this._insertCircles(dxf);
-      this._insertDimensions(dxf);
+      this._insertEntities(dxf);
       this.blockReferences.forEach(({ name, x, y, layer }) => {
         dxf.addBlockReference(name, x, y, layer);
       });

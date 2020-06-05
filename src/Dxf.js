@@ -89,6 +89,23 @@ export default class Dxf {
     layer && this.addTag(8, layer);
   }
 
+  addDiameterDimension(x1, y1, x2, y2, textX, textY, layer) {
+    this.addTag(0, 'DIMENSION');
+    this.addTag(70, 3);
+    this.addTag(15, x1);
+    this.addTag(25, y2);
+    this.addTag(35, 0);
+    this.addTag(10, x2);
+    this.addTag(20, y2);
+    this.addTag(30, 0);
+    if (textX && textY) {
+      this.addTag(11, textX);
+      this.addTag(21, textY);
+      this.addTag(31, 0);
+    }
+    layer && this.addTag(8, layer);
+  }
+
   toString() {
     return this.data;
   }

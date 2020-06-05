@@ -4,24 +4,22 @@ export default Base => class extends Base {
 
     this.lines = [];
     this.circles = [];
-    this.dimensions = [];
+    this.alignedDimensions = [];
+    this.diameterDimensions = [];
   }
 
-  _insertLines(dxf) {
+  _insertEntities(dxf) {
     this.lines.forEach(({ x1, y1, x2, y2 }) => {
       dxf.addLine(x1, y1, x2, y2);
     });
-  }
-
-  _insertCircles(dxf) {
     this.circles.forEach(({ x, y, radius, layer }) => {
       dxf.addCircle(x, y, radius, layer);
     });
-  }
-
-  _insertDimensions(dxf) {
-    this.dimensions.forEach(({ x1, y1, x2, y2, extX, extY, textX, textY }) => {
+    this.alignedDimensions.forEach(({ x1, y1, x2, y2, extX, extY, textX, textY }) => {
       dxf.addAlignedDimension(x1, y1, x2, y2, extX, extY, textX, textY);
+    });
+    this.diameterDimensions.forEach(({ x1, y1, x2, y2, textX, textY }) => {
+      dxf.addDiameterDimension(x1, y1, x2, y2, textX, textY);
     });
   }
 
@@ -41,57 +39,51 @@ export default Base => class extends Base {
     this.circles.push({ x, y, radius, layer });
   }
 
+  // textX and textY are optional
   addAlignedDimension(x1, y1, x2, y2, extX, extY, textX, textY, layer) {
-    this.dimensions.push({ x1, y1, x2, y2, extX, extY, textX, textY, layer })
+    this.alignedDimensions.push({ x1, y1, x2, y2, extX, extY, textX, textY, layer });
   }
 
   addSimpleAlignedDimension(x1, y1, x2, y2, direction, layer) {
-    let extX, extY, textX, textY;
-
-    let lesserX, greaterX, lesserY, greaterY;
-    if (y2 > y1) {
-      greaterY = y2
-      lesserY = y1
-    } else {
-      lesserY = y2;
-      greaterY = y1;
-    }
-    if (x2 > x1) {
-      greaterX = x2
-      lesserX = x1
-    } else {
-      lesserX = x2;
-      greaterX = x1;
-    }
-
+    let extX, extY;
 
     switch (direction) {
     case 'up':
       extX = x2;
       extY = y2 + 0.3125;
-      textX = lesserX + ((greaterX - lesserX) / 2);
-      textY = y1 + 0.4375;
       break;
     case 'right':
       extX = x2 + 0.3125;
       extY = y2;
-      textX = y1 + 0.4375;
-      textY = lesserY + ((greaterY - lesserY) / 2);
       break;
     case 'down':
       extX = x2;
       extY = y2 - 0.3125;
-      textX = lesserX + ((greaterX - lesserX) / 2);
-      textY = y1 - 0.4375;
       break;
     case 'left':
       extX = x2 - 0.3125;
       extY = y2;
-      textX = y1 - 0.4375;
-      textY = lesserY + ((greaterY - lesserY) / 2);
       break;
     }
 
-    this.addAlignedDimension(x1, y1, x2, y2, extX, extY, textX, textY, layer);
+    this.addAlignedDimension(x1, y1, x2, y2, extX, extY, null, null, layer);
+  }
+
+  // textX and textY are optional
+  addDiameterDimension(x1, y1, x2, y2, textX, textY, layer) {
+    this.diameterDimensions.push({ x1, y1, x2, y2, textX, textY, layer });
+  }
+
+  addSimpleDiameterDimension(x, y, diameter, layer) {
+    let x1, y1, x2, y2;
+
+    x1 = x - (diameter / 2);
+    x2 = x + (diameter / 2);
+    y1 = y2 = y;
+
+    // x = radius * cos(angle)
+    // y = radius * sin(angle)
+
+    this.diameterDimensions.push({ x1, y1, x2, y2, textX: null, textY: null, layer });
   }
 }
