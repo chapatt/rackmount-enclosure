@@ -127,10 +127,10 @@
       <p>{{ frontPanelWidth }} W x {{ frontPanelHeight }} L x {{ frontPanelThickness }} T</p>
       <p>Hole locations:</p>
       <ul>
-        <li>X: {{ frontPanelEndToCornerHole }}, Y: {{ frontPanelBottomEdgeToCornerHole }}, D: {{ hasHandles ? handleHoleDiameter : screwFreeFitDiameter }}</li>
-        <li>X: {{ frontPanelEndToCornerHole }}, Y: {{ frontPanelHeight - frontPanelTopEdgeToCornerHole }}, D: {{ hasHandles ? handleHoleDiameter : screwFreeFitDiameter }}</li>
-        <li>X: {{ frontPanelWidth - frontPanelEndToCornerHole }}, Y: {{ frontPanelBottomEdgeToCornerHole }}, D: {{ hasHandles ? handleHoleDiameter : screwFreeFitDiameter }}</li>
-        <li>X: {{ frontPanelWidth - frontPanelEndToCornerHole }}, Y: {{ frontPanelHeight - frontPanelTopEdgeToCornerHole }}, D: {{ hasHandles ? handleHoleDiameter : screwFreeFitDiameter }}</li>
+        <li>X: {{ frontPanelEndToCornerHole }}, Y: {{ frontPanelBottomEdgeToCornerHole }}, D: {{ frontPanelCornerHoleDiameter }}</li>
+        <li>X: {{ frontPanelEndToCornerHole }}, Y: {{ frontPanelHeight - frontPanelTopEdgeToCornerHole }}, D: {{ frontPanelCornerHoleDiameter }}</li>
+        <li>X: {{ frontPanelWidth - frontPanelEndToCornerHole }}, Y: {{ frontPanelBottomEdgeToCornerHole }}, D: {{ frontPanelCornerHoleDiameter }}</li>
+        <li>X: {{ frontPanelWidth - frontPanelEndToCornerHole }}, Y: {{ frontPanelHeight - frontPanelTopEdgeToCornerHole }}, D: {{ frontPanelCornerHoleDiameter }}</li>
       </ul>
 
       <h2>Sides (x2)</h2>
@@ -185,8 +185,8 @@
       </ul>
       <p>Vertical leg hole locations:</p>
       <ul>
-        <li>X: {{ frontRailEndToCornerHole }}, Y: {{ hasHandles ? frontRailEdgeToCornerHole : angleVerticalLeg / 2 }}, D: {{ frontFullRails ? screwFreeFitDiameter : pemDiameter }}</li>
-        <li>X: {{ frontRailWidth - frontRailEndToCornerHole }}, Y: {{ hasHandles ? frontRailEdgeToCornerHole : angleVerticalLeg / 2 }},  D: {{ frontFullRails ? screwFreeFitDiameter : pemDiameter }}</li>
+        <li>X: {{ frontRailEndToCornerHole }}, Y: {{ frontRailEdgeToCornerHole }}, D: {{ frontRailCornerHoleDiameter }}</li>
+        <li>X: {{ frontRailWidth - frontRailEndToCornerHole }}, Y: {{ frontRailEdgeToCornerHole }},  D: {{ frontRailCornerHoleDiameter }}</li>
       </ul>
 
       <h2>Rear Rails (x2)</h2>
@@ -199,16 +199,16 @@
       </ul>
       <p>Vertical leg hole locations:</p>
       <ul>
-        <li>X: {{ rearRailEndToCornerHole }}, Y: {{ angleVerticalLeg / 2 }}, D: {{ rearFullRails ? screwFreeFitDiameter : pemDiameter }}</li>
-        <li>X: {{ rearRailWidth - rearRailEndToCornerHole }}, Y: {{ angleVerticalLeg / 2 }}, D: {{ rearFullRails ? screwFreeFitDiameter : pemDiameter }}</li>
+        <li>X: {{ rearRailEndToCornerHole }}, Y: {{ angleVerticalLeg / 2 }}, D: {{ rearRailCornerHoleDiameter }}</li>
+        <li>X: {{ rearRailWidth - rearRailEndToCornerHole }}, Y: {{ angleVerticalLeg / 2 }}, D: {{ rearRailCornerHoleDiameter }}</li>
       </ul>
 
       <h2>Front Corner Brackets (x2)</h2>
       <p>{{ cornerBracketLength }} L</p>
       <p>Front leg hole locations:</p>
       <ul>
-        <li>X: {{ angleVerticalLeg / 2 }}, Y: {{ frontCornerBracketEndToHole }}, D: {{ hasHandles ? handleHoleDiameter : pemDiameter }}</li>
-        <li>X: {{ angleVerticalLeg / 2 }}, Y: {{ cornerBracketLength - frontCornerBracketEndToHole }}, D: {{ hasHandles ? handleHoleDiameter : pemDiameter }}</li>
+        <li>X: {{ angleVerticalLeg / 2 }}, Y: {{ frontCornerBracketEndToHole }}, D: {{ frontCornerBracketFrontLegHoleDiameter }}</li>
+        <li>X: {{ angleVerticalLeg / 2 }}, Y: {{ cornerBracketLength - frontCornerBracketEndToHole }}, D: {{ frontCornerBracketFrontLegHoleDiameter }}</li>
       </ul>
       <p>Side leg hole locations:</p>
       <ul>
@@ -284,6 +284,9 @@
       frontPanelBottomEdgeToCornerHole: function () {
         return this.hasHandles ? (this.frontPanelHeight - this.handleHoleSpacing) / 2 : this.frontPanelBottomEdgeToHole;
       },
+      frontPanelCornerHoleDiameter: function () {
+        return this.hasHandles ? this.handleHoleDiameter : this.screwFreeFitDiameter;
+      },
       cornerHoleWidth: function () {
         return this.rearPanelWidth - (2 * (this.verticalAngleThickness + (this.verticalAngleLeg / 2)));
       },
@@ -335,8 +338,14 @@
       frontRailWidth: function () {
         return this.frontFullRails ? this.rearPanelWidth : this.frontPartialRailWidth;
       },
+      frontRailCornerHoleDiameter: function () {
+        return this.frontFullRails ? this.screwFreeFitDiameter : this.pemDiameter;
+      },
       rearRailWidth: function () {
         return this.rearFullRails ? this.rearPanelWidth : this.rearPartialRailWidth;
+      },
+      rearRailCornerHoleDiameter: function () {
+        return this.rearFullRails ? this.screwFreeFitDiameter : this.pemDiameter;
       },
       sideRailEndToFrontCornerHole: function () {
         return (this.verticalAngleLeg / 2) + (this.frontFullRails ? this.angleThickness : 0);
@@ -362,6 +371,9 @@
       cornerBracketEndToHole: function () {
         return (this.verticalAngleLeg / 2) - this.angleThickness;
       },
+      frontCornerBracketFrontLegHoleDiameter: function () {
+        return this.hasHandles ? this.handleHoleDiameter : this.pemDiameter;
+      },
     },
     methods: {
       generateDxf: function () {
@@ -384,11 +396,11 @@
         frontPanelBlock.addRectangle(this.frontPanelWidth, this.frontPanelHeight);
         frontPanelBlock.addSimpleAlignedDimension(0, 0, 0, this.frontPanelHeight, 'left');
         frontPanelBlock.addSimpleAlignedDimension(0, this.frontPanelHeight, this.frontPanelWidth, this.frontPanelHeight, 'up');
-        frontPanelBlock.addCircle(this.frontPanelEndToCornerHole, this.frontPanelBottomEdgeToCornerHole, (this.hasHandles ? this.handleHoleDiameter : this.screwFreeFitDiameter) / 2);
-        frontPanelBlock.addSimpleDiameterDimension(this.frontPanelEndToCornerHole, this.frontPanelBottomEdgeToCornerHole, this.hasHandles ? this.handleHoleDiameter : this.screwFreeFitDiameter);
-        frontPanelBlock.addCircle(this.frontPanelEndToCornerHole, this.frontPanelHeight - this.frontPanelTopEdgeToCornerHole, (this.hasHandles ? this.handleHoleDiameter : this.screwFreeFitDiameter) / 2);
-        frontPanelBlock.addCircle(this.frontPanelWidth - this.frontPanelEndToCornerHole, this.frontPanelBottomEdgeToCornerHole, (this.hasHandles ? this.handleHoleDiameter : this.screwFreeFitDiameter) / 2);
-        frontPanelBlock.addCircle(this.frontPanelWidth - this.frontPanelEndToCornerHole, this.frontPanelHeight - this.frontPanelTopEdgeToCornerHole, (this.hasHandles ? this.handleHoleDiameter : this.screwFreeFitDiameter) / 2);
+        frontPanelBlock.addCircle(this.frontPanelEndToCornerHole, this.frontPanelBottomEdgeToCornerHole, this.frontPanelCornerHoleDiameter / 2);
+        frontPanelBlock.addSimpleDiameterDimension(this.frontPanelEndToCornerHole, this.frontPanelBottomEdgeToCornerHole, this.frontPanelCornerHoleDiameter);
+        frontPanelBlock.addCircle(this.frontPanelEndToCornerHole, this.frontPanelHeight - this.frontPanelTopEdgeToCornerHole, this.frontPanelCornerHoleDiameter / 2);
+        frontPanelBlock.addCircle(this.frontPanelWidth - this.frontPanelEndToCornerHole, this.frontPanelBottomEdgeToCornerHole, this.frontPanelCornerHoleDiameter / 2);
+        frontPanelBlock.addCircle(this.frontPanelWidth - this.frontPanelEndToCornerHole, this.frontPanelHeight - this.frontPanelTopEdgeToCornerHole, this.frontPanelCornerHoleDiameter / 2);
         dxfDocument.addBlock(frontPanelBlock);
         dxfDocument.addBlockReference('front_panel', 0, 0, 'outlines');
 
