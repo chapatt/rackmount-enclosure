@@ -480,10 +480,16 @@
         };
 
         Object.keys(defaultParams).forEach((key) => {
-          const queryValue = Number.parseFloat(this.$route.query[key]);
-          const defaultValue = defaultParams[key];
+          const queryValue = this.$route.query[key];
+          if (queryValue) {
+            const valueAsNumber = Number.parseFloat(queryValue);
+            if (!Number.isNaN(valueAsNumber)) {
+              this[key] = valueAsNumber;
+              return;
+            }
+          }
 
-          this[key] = queryValue ? queryValue : defaultValue;
+          this[key] = defaultParams[key];
         });
       },
     },
