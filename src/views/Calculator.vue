@@ -276,6 +276,7 @@
       return {
         url: window.location,
         dxfString: null,
+        drawingSpacing: 1,
         ...defaultParams,
       };
     },
@@ -392,6 +393,9 @@
         const queryString = new URLSearchParams(inputParams);
         this.url = location.protocol + '//' + location.host + location.pathname + '?' + queryString;
       },
+      addRailToDxf(dxf) {
+        dxf;
+      },
       generateDxf: function () {
         const dxfDocument = new DxfDocument('English');
 
@@ -399,13 +403,13 @@
         const topBlock = new DxfBlock('top');
         topBlock.addRectangle(this.topWidth, this.topDepth);
         dxfDocument.addBlock(topBlock);
-        dxfDocument.addBlockReference('top', this.sideThickness, this.angleVerticalLeg + 1 + this.frontPanelHeight + 1, 'outlines');
+        dxfDocument.addBlockReference('top', this.sideThickness, this.angleVerticalLeg + this.frontPanelHeight + (2 * this.drawingSpacing), 'outlines');
 
         // Top front rail
         const topFrontRailBlock = new DxfBlock('top_front_rail');
         topFrontRailBlock.addRectangle(this.frontRailWidth, this.angleVerticalLeg);
         dxfDocument.addBlock(topFrontRailBlock);
-        dxfDocument.addBlockReference('top_front_rail', (this.width - this.frontRailWidth) / 2, this.frontPanelHeight + 1, 'outlines');
+        dxfDocument.addBlockReference('top_front_rail', (this.width - this.frontRailWidth) / 2, this.frontPanelHeight + this.drawingSpacing, 'outlines');
 
         // Front panel
         const frontPanelBlock = new DxfBlock('front_panel');
@@ -424,61 +428,61 @@
         const bottomFrontRailBlock = new DxfBlock('bottom_front_rail');
         bottomFrontRailBlock.addRectangle(this.frontRailWidth, this.angleHorizontalLeg);
         dxfDocument.addBlock(bottomFrontRailBlock);
-        dxfDocument.addBlockReference('bottom_front_rail', (this.width - this.frontRailWidth) / 2, -(this.angleHorizontalLeg + 1), 'outlines');
+        dxfDocument.addBlockReference('bottom_front_rail', (this.width - this.frontRailWidth) / 2, -(this.angleHorizontalLeg + this.drawingSpacing), 'outlines');
 
         // Bottom
         const bottomBlock = new DxfBlock('bottom');
         bottomBlock.addRectangle(this.bottomWidth, this.bottomDepth);
         dxfDocument.addBlock(bottomBlock);
-        dxfDocument.addBlockReference('bottom', this.sideThickness, -(this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+        dxfDocument.addBlockReference('bottom', this.sideThickness, -(this.bottomDepth + this.angleHorizontalLeg + (2 * this.drawingSpacing)), 'outlines');
 
         // Bottom Left Side Rail
         const bottomLeftSideRailBlock = new DxfBlock('bottom_left_side_rail');
         bottomLeftSideRailBlock.addRectangle(this.angleHorizontalLeg, this.sideRailDepth);
         dxfDocument.addBlock(bottomLeftSideRailBlock);
-        dxfDocument.addBlockReference('bottom_left_side_rail', this.sideThickness + this.bottomWidth + 1, -(this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+        dxfDocument.addBlockReference('bottom_left_side_rail', this.sideThickness + this.bottomWidth + this.drawingSpacing, -(this.bottomDepth + this.angleHorizontalLeg + (2 * this.drawingSpacing)), 'outlines');
 
         // Left Side
         const leftSideBlock = new DxfBlock('left_side');
         leftSideBlock.addRectangle(this.height, this.sideDepth);
         dxfDocument.addBlock(leftSideBlock);
-        dxfDocument.addBlockReference('left_side', this.sideThickness + this.bottomWidth + 1 + this.angleHorizontalLeg + 1, -(this.sideDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+        dxfDocument.addBlockReference('left_side', this.sideThickness + this.bottomWidth + this.angleHorizontalLeg + (2 * this.drawingSpacing), -(this.sideDepth + this.angleHorizontalLeg + (2 * this.drawingSpacing)), 'outlines');
 
         // Front Left Corner Bracket
         const frontLeftCornerBracketBlock = new DxfBlock('front_left_corner_bracket');
         frontLeftCornerBracketBlock.addRectangle(this.cornerBracketHeight, this.verticalAngleLeg);
         dxfDocument.addBlock(frontLeftCornerBracketBlock);
-        dxfDocument.addBlockReference('front_left_corner_bracket', this.sideThickness + this.bottomWidth + 1 + this.angleHorizontalLeg + 1 + this.bottomThickness + this.angleThickness, -(this.angleHorizontalLeg + 1), 'outlines');
+        dxfDocument.addBlockReference('front_left_corner_bracket', this.sideThickness + this.bottomWidth + this.angleHorizontalLeg + (2 * this.drawingSpacing) + this.bottomThickness + this.angleThickness, -(this.angleHorizontalLeg + this.drawingSpacing), 'outlines');
 
         // Rear Left Corner Bracket
         const rearLeftCornerBracketBlock = new DxfBlock('rear_left_corner_bracket');
         rearLeftCornerBracketBlock.addRectangle(this.cornerBracketHeight, this.verticalAngleLeg);
         dxfDocument.addBlock(rearLeftCornerBracketBlock);
-        dxfDocument.addBlockReference('rear_left_corner_bracket', this.sideThickness + this.bottomWidth + 1 + this.angleHorizontalLeg + 1 + this.bottomThickness + this.angleThickness, -(this.sideDepth + 1 + this.angleHorizontalLeg + 1 + this.verticalAngleLeg + 1), 'outlines');
+        dxfDocument.addBlockReference('rear_left_corner_bracket', this.sideThickness + this.bottomWidth + this.angleHorizontalLeg + (2 * this.drawingSpacing) + this.bottomThickness + this.angleThickness, -(this.sideDepth + this.angleHorizontalLeg + this.verticalAngleLeg + (3 * this.drawingSpacing)), 'outlines');
 
         // Top Left Side Rail
         const topLeftSideRailBlock = new DxfBlock('top_left_side_rail');
         topLeftSideRailBlock.addRectangle(this.angleHorizontalLeg, this.sideRailDepth);
         dxfDocument.addBlock(topLeftSideRailBlock);
-        dxfDocument.addBlockReference('top_left_side_rail', this.sideThickness + this.bottomWidth + 1 + this.angleHorizontalLeg + 1 + this.height + 1, -(this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+        dxfDocument.addBlockReference('top_left_side_rail', this.sideThickness + this.bottomWidth + this.angleHorizontalLeg + this.height + (3 * this.drawingSpacing), -(this.bottomDepth + this.angleHorizontalLeg + (2 * this.drawingSpacing)), 'outlines');
 
         // Bottom rear rail
         const bottomRearRailBlock = new DxfBlock('bottom_rear_rail');
         bottomRearRailBlock.addRectangle(this.rearRailWidth, this.angleHorizontalLeg);
         dxfDocument.addBlock(bottomRearRailBlock);
-        dxfDocument.addBlockReference('bottom_rear_rail', (this.width - this.rearRailWidth) / 2, -(this.angleHorizontalLeg + 1 + this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+        dxfDocument.addBlockReference('bottom_rear_rail', (this.width - this.rearRailWidth) / 2, -(this.angleHorizontalLeg + this.bottomDepth + this.angleHorizontalLeg + (3 * this.drawingSpacing)), 'outlines');
 
         // Rear panel
         const rearPanelBlock = new DxfBlock('rear_panel');
         rearPanelBlock.addRectangle(this.rearPanelWidth, this.height);
         dxfDocument.addBlock(rearPanelBlock);
-        dxfDocument.addBlockReference('rear_panel', this.sideThickness, -(this.height + 1 + this.angleHorizontalLeg + 1 + this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+        dxfDocument.addBlockReference('rear_panel', this.sideThickness, -(this.height + this.angleHorizontalLeg + this.bottomDepth + this.angleHorizontalLeg + (4 * this.drawingSpacing)), 'outlines');
 
         // Top rear rail
         const topRearRailBlock = new DxfBlock('top_rear_rail');
         topRearRailBlock.addRectangle(this.rearRailWidth, this.angleHorizontalLeg);
         dxfDocument.addBlock(topRearRailBlock);
-        dxfDocument.addBlockReference('top_rear_rail', (this.width - this.rearRailWidth) / 2, -(this.angleHorizontalLeg + 1 + this.height + 1 + this.angleHorizontalLeg + 1 + this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+        dxfDocument.addBlockReference('top_rear_rail', (this.width - this.rearRailWidth) / 2, -(this.angleHorizontalLeg + this.height + this.angleHorizontalLeg + this.bottomDepth + this.angleHorizontalLeg + (5 * this.drawingSpacing)), 'outlines');
 
         this.dxfString = dxfDocument.toString();
         console.log(this.dxfString);
