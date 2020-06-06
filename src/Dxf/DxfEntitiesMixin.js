@@ -74,15 +74,21 @@ export default Base => class extends Base {
     this.diameterDimensions.push({ x1, y1, x2, y2, textX, textY, layer });
   }
 
-  addSimpleDiameterDimension(x, y, diameter, layer) {
+  addSimpleDiameterDimension(x, y, diameter, angleDeg, layer) {
     let x1, y1, x2, y2;
 
-    x1 = x - (diameter / 2);
-    x2 = x + (diameter / 2);
-    y1 = y2 = y;
+    //x1 = x - (diameter / 2);
+    //x2 = x + (diameter / 2);
+    //y1 = y2 = y;
 
-    // x = radius * cos(angle)
-    // y = radius * sin(angle)
+    const radius = diameter / 2;
+    const angleRad = angleDeg * (Math.PI / 180);
+    const angleOppositeRad = angleRad + Math.PI;
+
+    x1 = x + (radius * Math.cos(angleOppositeRad));
+    y1 = y + (radius * Math.sin(angleOppositeRad));
+    x2 = x + (radius * Math.cos(angleRad));
+    y2 = y + (radius * Math.sin(angleRad));
 
     this.diameterDimensions.push({ x1, y1, x2, y2, textX: null, textY: null, layer });
   }

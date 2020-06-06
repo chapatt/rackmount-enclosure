@@ -208,29 +208,29 @@
       </ul>
 
       <h2>Front Corner Brackets (x2)</h2>
-      <p>{{ cornerBracketLength }} L</p>
+      <p>{{ cornerBracketHeight }} L</p>
       <p>Front leg hole locations:</p>
       <ul>
         <li>X: {{ angleVerticalLeg / 2 }}, Y: {{ frontCornerBracketEndToHole }}, D: {{ frontCornerBracketFrontLegHoleDiameter }}</li>
-        <li>X: {{ angleVerticalLeg / 2 }}, Y: {{ cornerBracketLength - frontCornerBracketEndToHole }}, D: {{ frontCornerBracketFrontLegHoleDiameter }}</li>
+        <li>X: {{ angleVerticalLeg / 2 }}, Y: {{ cornerBracketHeight - frontCornerBracketEndToHole }}, D: {{ frontCornerBracketFrontLegHoleDiameter }}</li>
       </ul>
       <p>Side leg hole locations:</p>
       <ul>
         <li>X: {{ angleVerticalLeg / 2 }}, Y: {{ cornerBracketEndToHole }}, D: {{ pemDiameter }}</li>
-        <li>X: {{ angleVerticalLeg / 2 }}, Y: {{ cornerBracketLength - cornerBracketEndToHole }}, D: {{ pemDiameter }}</li>
+        <li>X: {{ angleVerticalLeg / 2 }}, Y: {{ cornerBracketHeight - cornerBracketEndToHole }}, D: {{ pemDiameter }}</li>
       </ul>
 
       <h2>Rear Corner Brackets (x2)</h2>
-      <p>{{ cornerBracketLength }} L</p>
+      <p>{{ cornerBracketHeight }} L</p>
       <p>Rear leg hole locations:</p>
       <ul>
         <li>X: {{ angleVerticalLeg / 2 }}, Y: {{ cornerBracketEndToHole }}, D: {{ pemDiameter }}</li>
-        <li>X: {{ angleVerticalLeg / 2 }}, Y: {{ cornerBracketLength - cornerBracketEndToHole }}, D: {{ pemDiameter }}</li>
+        <li>X: {{ angleVerticalLeg / 2 }}, Y: {{ cornerBracketHeight - cornerBracketEndToHole }}, D: {{ pemDiameter }}</li>
       </ul>
       <p>Side leg hole locations:</p>
       <ul>
         <li>X: {{ angleVerticalLeg / 2 }}, Y: {{ cornerBracketEndToHole }}, D: {{ pemDiameter }}</li>
-        <li>X: {{ angleVerticalLeg / 2 }}, Y: {{ cornerBracketLength - cornerBracketEndToHole }}, D: {{ pemDiameter }}</li>
+        <li>X: {{ angleVerticalLeg / 2 }}, Y: {{ cornerBracketHeight - cornerBracketEndToHole }}, D: {{ pemDiameter }}</li>
       </ul>
     </div>
   </div>
@@ -361,8 +361,8 @@
       sideRailEndToRearCornerHole: function () {
         return (this.verticalAngleLeg / 2) + (this.rearFullRails ? this.angleThickness : 0);
       },
-      cornerBracketLength: function () {
-        return this.height - (2 * (this.topThickness + this.bottomThickness + this.angleThickness));
+      cornerBracketHeight: function () {
+        return this.height - ((2 * this.angleThickness) + this.topThickness + this.bottomThickness);
       },
       frontRailEndToCornerHole: function () {
         return (this.verticalAngleLeg / 2) + (this.frontFullRails ? this.angleThickness : 0);
@@ -413,7 +413,7 @@
         frontPanelBlock.addSimpleAlignedDimension(0, 0, 0, this.frontPanelHeight, 'left');
         frontPanelBlock.addSimpleAlignedDimension(0, this.frontPanelHeight, this.frontPanelWidth, this.frontPanelHeight, 'up');
         frontPanelBlock.addCircle(this.frontPanelEndToCornerHole, this.frontPanelBottomEdgeToCornerHole, this.frontPanelCornerHoleDiameter / 2);
-        frontPanelBlock.addSimpleDiameterDimension(this.frontPanelEndToCornerHole, this.frontPanelBottomEdgeToCornerHole, this.frontPanelCornerHoleDiameter);
+        frontPanelBlock.addSimpleDiameterDimension(this.frontPanelEndToCornerHole, this.frontPanelBottomEdgeToCornerHole, this.frontPanelCornerHoleDiameter, 45);
         frontPanelBlock.addCircle(this.frontPanelEndToCornerHole, this.frontPanelHeight - this.frontPanelTopEdgeToCornerHole, this.frontPanelCornerHoleDiameter / 2);
         frontPanelBlock.addCircle(this.frontPanelWidth - this.frontPanelEndToCornerHole, this.frontPanelBottomEdgeToCornerHole, this.frontPanelCornerHoleDiameter / 2);
         frontPanelBlock.addCircle(this.frontPanelWidth - this.frontPanelEndToCornerHole, this.frontPanelHeight - this.frontPanelTopEdgeToCornerHole, this.frontPanelCornerHoleDiameter / 2);
@@ -431,6 +431,36 @@
         bottomBlock.addRectangle(this.bottomWidth, this.bottomDepth);
         dxfDocument.addBlock(bottomBlock);
         dxfDocument.addBlockReference('bottom', this.sideThickness, -(this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+
+        // Bottom Left Side Rail
+        const bottomLeftSideRailBlock = new DxfBlock('bottom_left_side_rail');
+        bottomLeftSideRailBlock.addRectangle(this.angleHorizontalLeg, this.sideRailDepth);
+        dxfDocument.addBlock(bottomLeftSideRailBlock);
+        dxfDocument.addBlockReference('bottom_left_side_rail', this.sideThickness + this.bottomWidth + 1, -(this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+
+        // Left Side
+        const leftSideBlock = new DxfBlock('left_side');
+        leftSideBlock.addRectangle(this.height, this.sideDepth);
+        dxfDocument.addBlock(leftSideBlock);
+        dxfDocument.addBlockReference('left_side', this.sideThickness + this.bottomWidth + 1 + this.angleHorizontalLeg + 1, -(this.sideDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+
+        // Front Left Corner Bracket
+        const frontLeftCornerBracketBlock = new DxfBlock('front_left_corner_bracket');
+        frontLeftCornerBracketBlock.addRectangle(this.cornerBracketHeight, this.verticalAngleLeg);
+        dxfDocument.addBlock(frontLeftCornerBracketBlock);
+        dxfDocument.addBlockReference('front_left_corner_bracket', this.sideThickness + this.bottomWidth + 1 + this.angleHorizontalLeg + 1 + this.bottomThickness + this.angleThickness, -(this.angleHorizontalLeg + 1), 'outlines');
+
+        // Rear Left Corner Bracket
+        const rearLeftCornerBracketBlock = new DxfBlock('rear_left_corner_bracket');
+        rearLeftCornerBracketBlock.addRectangle(this.cornerBracketHeight, this.verticalAngleLeg);
+        dxfDocument.addBlock(rearLeftCornerBracketBlock);
+        dxfDocument.addBlockReference('rear_left_corner_bracket', this.sideThickness + this.bottomWidth + 1 + this.angleHorizontalLeg + 1 + this.bottomThickness + this.angleThickness, -(this.sideDepth + 1 + this.angleHorizontalLeg + 1 + this.verticalAngleLeg + 1), 'outlines');
+
+        // Top Left Side Rail
+        const topLeftSideRailBlock = new DxfBlock('top_left_side_rail');
+        topLeftSideRailBlock.addRectangle(this.angleHorizontalLeg, this.sideRailDepth);
+        dxfDocument.addBlock(topLeftSideRailBlock);
+        dxfDocument.addBlockReference('top_left_side_rail', this.sideThickness + this.bottomWidth + 1 + this.angleHorizontalLeg + 1 + this.height + 1, -(this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
 
         // Bottom rear rail
         const bottomRearRailBlock = new DxfBlock('bottom_rear_rail');
