@@ -3006,6 +3006,12 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
+"dxf-parser@https://github.com/gdsestimating/dxf-parser.git":
+  version "1.0.0-alpha.2"
+  resolved "https://github.com/gdsestimating/dxf-parser.git#ab6c0be456922b12c6c04f5175b12c19863a9d1b"
+  dependencies:
+    loglevel "^1.2.0"
+
 easy-stack@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/easy-stack/-/easy-stack-1.0.0.tgz#12c91b3085a37f0baa336e9486eac4bf94e3e788"
@@ -4939,7 +4945,7 @@ log-symbols@^2.2.0:
   dependencies:
     chalk "^2.0.1"
 
-loglevel@^1.6.8:
+loglevel@^1.2.0, loglevel@^1.6.8:
   version "1.6.8"
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.8.tgz#8a25fb75d092230ecd4457270d80b54e28011171"
   integrity sha512-bsU7+gc9AJ2SqpzxwU3+1fedl8zAntbtC5XYlt3s2j1hJcn2PsXSmgN8TaLG/J1/2mod4+cE/3vNL70/c1RNCA==
@@ -7513,6 +7519,15 @@ thread-loader@^2.1.3:
     loader-runner "^2.3.1"
     loader-utils "^1.1.0"
     neo-async "^2.6.0"
+
+"three-dxf@https://github.com/gdsestimating/three-dxf.git":
+  version "1.0.0-alpha.1"
+  resolved "https://github.com/gdsestimating/three-dxf.git#78657c8d6bf9b9124ffe3216da1e370a842e1d4e"
+
+three@^0.117.1:
+  version "0.117.1"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.117.1.tgz#a49bcb1a6ddea2f250003e42585dc3e78e92b9d3"
+  integrity sha512-t4zeJhlNzUIj9+ub0l6nICVimSuRTZJOqvk3Rmlu+YGdTOJ49Wna8p7aumpkXJakJfITiybfpYE1XN1o1Z34UQ==
 
 through2@^2.0.0:
   version "2.0.5"

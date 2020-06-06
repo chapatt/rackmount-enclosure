@@ -116,7 +116,11 @@
       <input id="handleHoleSpacing" v-model.number="handleHoleSpacing" type="text" :disabled="!hasHandles" />
     </fieldset>
 
-    <button v-on:click="downloadDxf()">Download DXF</button>
+    <button v-on:click="generateDxf()">Generate DXF</button>
+
+    <button v-if="this.dxfString" v-on:click="downloadDxf()">Download DXF</button>
+
+    <div ref="dxfView" class="dxf-view" />
 
     <div>
       <h2>Front Panel</h2>
@@ -232,10 +236,15 @@
   import DxfDocument from './DxfDocument';
   import DxfBlock from './DxfBlock';
 
+  import DxfParser from 'dxf-parser';
+  import * as ThreeDxf from 'three-dxf';
+
   export default {
     name: 'App',
     data: function () {
       return {
+        dxfString: null,
+
         frontPanelWidth: 19,
         frontPanelHeight: 1.75 - (1 / 32),
         frontFullRails: false,
@@ -355,20 +364,20 @@
       },
     },
     methods: {
-      downloadDxf: function () {
-        const document = new DxfDocument('English');
+      generateDxf: function () {
+        const dxfDocument = new DxfDocument('English');
 
         // Top
         const topBlock = new DxfBlock('top');
         topBlock.addRectangle(this.topWidth, this.topDepth);
-        document.addBlock(topBlock);
-        document.addBlockReference('top', 0, this.angleVerticalLeg + 1 + this.frontPanelHeight + 1, 'outlines');
+        dxfDocument.addBlock(topBlock);
+        dxfDocument.addBlockReference('top', 0, this.angleVerticalLeg + 1 + this.frontPanelHeight + 1, 'outlines');
 
         // Top front rail
         const topFrontRailBlock = new DxfBlock('top_front_rail');
         topFrontRailBlock.addRectangle(this.frontRailWidth, this.angleVerticalLeg);
-        document.addBlock(topFrontRailBlock);
-        document.addBlockReference('top_front_rail', 0, this.frontPanelHeight + 1, 'outlines');
+        dxfDocument.addBlock(topFrontRailBlock);
+        dxfDocument.addBlockReference('top_front_rail', 0, this.frontPanelHeight + 1, 'outlines');
 
         // Front panel
         const frontPanelBlock = new DxfBlock('front_panel');
@@ -380,29 +389,37 @@
         frontPanelBlock.addCircle(this.frontPanelEndToCornerHole, this.frontPanelHeight - this.frontPanelTopEdgeToCornerHole, (this.hasHandles ? this.handleHoleDiameter : this.screwFreeFitDiameter) / 2);
         frontPanelBlock.addCircle(this.frontPanelWidth - this.frontPanelEndToCornerHole, this.frontPanelBottomEdgeToCornerHole, (this.hasHandles ? this.handleHoleDiameter : this.screwFreeFitDiameter) / 2);
         frontPanelBlock.addCircle(this.frontPanelWidth - this.frontPanelEndToCornerHole, this.frontPanelHeight - this.frontPanelTopEdgeToCornerHole, (this.hasHandles ? this.handleHoleDiameter : this.screwFreeFitDiameter) / 2);
-        document.addBlock(frontPanelBlock);
-        document.addBlockReference('front_panel', 0, 0, 'outlines');
+        dxfDocument.addBlock(frontPanelBlock);
+        dxfDocument.addBlockReference('front_panel', 0, 0, 'outlines');
 
         // Bottom front rail
         const bottomFrontRailBlock = new DxfBlock('bottom_front_rail');
         bottomFrontRailBlock.addRectangle(this.frontRailWidth, this.angleHorizontalLeg);
-        document.addBlock(bottomFrontRailBlock);
-        document.addBlockReference('bottom_front_rail', 0, -(this.angleHorizontalLeg + 1), 'outlines');
+        dxfDocument.addBlock(bottomFrontRailBlock);
+        dxfDocument.addBlockReference('bottom_front_rail', 0, -(this.angleHorizontalLeg + 1), 'outlines');
 
         // Bottom
         const bottomBlock = new DxfBlock('bottom');
         bottomBlock.addRectangle(this.bottomWidth, this.bottomDepth);
-        document.addBlock(bottomBlock);
-        document.addBlockReference('bottom', 0, -(this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+        dxfDocument.addBlock(bottomBlock);
+        dxfDocument.addBlockReference('bottom', 0, -(this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
 
         // Rear panel
         const rearPanelBlock = new DxfBlock('rear_panel');
         rearPanelBlock.addRectangle(this.rearPanelWidth, this.height);
-        document.addBlock(rearPanelBlock);
-        document.addBlockReference('rear_panel', 0, -(this.height + 1 + this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+        dxfDocument.addBlock(rearPanelBlock);
+        dxfDocument.addBlockReference('rear_panel', 0, -(this.height + 1 + this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
 
-                console.log(document.toString());
-        this.downloadText('drawing.dxf', document.toString());
+        this.dxfString = dxfDocument.toString();
+        console.log(this.dxfString);
+
+        const parser = new DxfParser();
+        const dxfObject = parser.parseSync(this.dxfString);
+        console.log(dxfObject);
+        new ThreeDxf.Viewer(dxfObject, this.$refs.dxfView, 400, 400);
+      },
+      downloadDxf: function () {
+        this.downloadText('drawing.dxf', this.dxfString);
       },
       downloadText: function (filename, text) {
         const link = document.createElement('a');
@@ -412,13 +429,30 @@
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-      }
+      },
     }
   }
 </script>
 
 <style>
   input, fieldset {
+    margin-left: 0;
+    margin-right: 0;
     margin-bottom: 0.5em;
+  }
+  fieldset, .dxf-view {
+    border-width: 2px;
+    border-color: darkgray;
+    border-style: solid;
+  }
+  button {
+    margin-right: 1em;
+  }
+  button, .dxf-view {
+    margin-bottom: 1em;
+  }
+  .dxf-view {
+    width: 400px;
+    height: 400px;
   }
 </style>
