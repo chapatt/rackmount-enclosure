@@ -4,11 +4,11 @@
       <legend>Front Panel</legend>
 
       <label for="frontPanelWidth">Front panel width: </label>
-      <input id="frontPanelWidth" v-model.number="frontPanelWidth" type="text" />
+      <input id="frontPanelWidth" v-model.number="frontPanelWidth" type="number" />
       <br />
 
       <label for="frontPanelHeight">Front panel height: </label>
-      <input id="frontPanelHeight" v-model.number="frontPanelHeight" type="text" />
+      <input id="frontPanelHeight" v-model.number="frontPanelHeight" type="number" />
     </fieldset>
 
     <fieldset>
@@ -19,7 +19,7 @@
       <br />
 
       <label for="frontRailWidth">Front rail width: </label>
-      <input id="frontRailWidth" v-model.number="frontPartialRailWidth" type="text" :disabled="frontFullRails" />
+      <input id="frontRailWidth" v-model.number="frontPartialRailWidth" type="number" :disabled="frontFullRails" />
       <br />
 
       <label for="rearFullRails">Full support rails across rear: </label>
@@ -27,7 +27,7 @@
       <br />
 
       <label for="rearRailWidth">Rear rail width: </label>
-      <input id="rearRailWidth" v-model.number="rearPartialRailWidth" type="text" :disabled="rearFullRails" />
+      <input id="rearRailWidth" v-model.number="rearPartialRailWidth" type="number" :disabled="rearFullRails" />
       <br />
     </fieldset>
 
@@ -35,38 +35,38 @@
       <legend>General Dimensions</legend>
 
       <label for="width">Width: </label>
-      <input id="width" v-model.number="width" type="text" />
+      <input id="width" v-model.number="width" type="number" />
       <br />
 
       <label for="height">Height: </label>
-      <input id="height" v-model.number="height" type="text" />
+      <input id="height" v-model.number="height" type="number" />
       <br />
 
       <label for="depth">Depth: </label>
-      <input id="depth" v-model.number="depth" type="text" />
+      <input id="depth" v-model.number="depth" type="number" />
     </fieldset>
 
     <fieldset>
       <legend>Thicknesses</legend>
 
       <label for="frontPanelThickness">Front panel thickness: </label>
-      <input id="frontPanelThickness" v-model.number="frontPanelThickness" type="text" />
+      <input id="frontPanelThickness" v-model.number="frontPanelThickness" type="number" />
       <br />
 
       <label for="rearPanelThickness">Rear panel thickness: </label>
-      <input id="rearPanelThickness" v-model.number="rearPanelThickness" type="text" />
+      <input id="rearPanelThickness" v-model.number="rearPanelThickness" type="number" />
       <br />
 
       <label for="sideThickness">Side thickness: </label>
-      <input id="sideThickness" v-model.number="sideThickness" type="text" />
+      <input id="sideThickness" v-model.number="sideThickness" type="number" />
       <br />
 
       <label for="topThickness">Top thickness: </label>
-      <input id="topThickness" v-model.number="topThickness" type="text" />
+      <input id="topThickness" v-model.number="topThickness" type="number" />
       <br />
 
       <label for="bottomThickness">Bottom thickness: </label>
-      <input id="bottomThickness" v-model.number="bottomThickness" type="text" />
+      <input id="bottomThickness" v-model.number="bottomThickness" type="number" />
       <br />
     </fieldset>
 
@@ -74,34 +74,34 @@
       <legend>Support Angle Dimensions</legend>
 
       <label for="angleVerticalLeg">Rail vertical leg: </label>
-      <input id="angleVerticalLeg" v-model.number="angleVerticalLeg" type="text" />
+      <input id="angleVerticalLeg" v-model.number="angleVerticalLeg" type="number" />
       <br />
 
       <label for="angleHorizontalLeg">Rail horizontal leg: </label>
-      <input id="angleHorizontalLeg" v-model.number="angleHorizontalLeg" type="text" />
+      <input id="angleHorizontalLeg" v-model.number="angleHorizontalLeg" type="number" />
       <br />
 
       <label for="angleThickness">Thickness: </label>
-      <input id="angleThickness" v-model.number="angleThickness" type="text" />
+      <input id="angleThickness" v-model.number="angleThickness" type="number" />
       <br />
 
       <label for="verticalAngleLeg">Corner bracket leg: </label>
-      <input id="verticalAngleLeg" v-model.number="verticalAngleLeg" type="text" />
+      <input id="verticalAngleLeg" v-model.number="verticalAngleLeg" type="number" />
       <br />
 
       <label for="verticalAngleThickness">Corner bracket thickness: </label>
-      <input id="verticalAngleThickness" v-model.number="verticalAngleThickness" type="text" />
+      <input id="verticalAngleThickness" v-model.number="verticalAngleThickness" type="number" />
     </fieldset>
 
     <fieldset>
       <legend>Hardware</legend>
 
       <label for="screwFreeFitDiameter">Screw free fit diameter: </label>
-      <input id="screwFreeFitDiameter" v-model.number="screwFreeFitDiameter" type="text" />
+      <input id="screwFreeFitDiameter" v-model.number="screwFreeFitDiameter" type="number" />
       <br />
 
       <label for="pemDiameter">PEM nut diameter: </label>
-      <input id="pemDiameter" v-model.number="pemDiameter" type="text" />
+      <input id="pemDiameter" v-model.number="pemDiameter" type="number" />
       <br />
 
       <label for="hasHandles">Adjust front/side holes for handles: </label>
@@ -109,11 +109,11 @@
       <br />
 
       <label for="handleHoleDiameter">Handle hole diameter: </label>
-      <input id="handleHoleDiameter" v-model.number="handleHoleDiameter" type="text" :disabled="!hasHandles" />
+      <input id="handleHoleDiameter" v-model.number="handleHoleDiameter" type="number" :disabled="!hasHandles" />
       <br />
 
       <label for="handleHoleSpacing">Handle hole spacing (center-to-center): </label>
-      <input id="handleHoleSpacing" v-model.number="handleHoleSpacing" type="text" :disabled="!hasHandles" />
+      <input id="handleHoleSpacing" v-model.number="handleHoleSpacing" type="number" :disabled="!hasHandles" />
     </fieldset>
 
     <button v-on:click="generateUrl()">Generate URL</button>
@@ -244,9 +244,7 @@
   import * as ThreeDxf from 'three-dxf';
 
   export default {
-    name: 'App',
-    data: function () {
-      return {
+    name: 'App', data: function () { return {
         url: window.location,
         dxfString: null,
       };
@@ -482,7 +480,7 @@
         };
 
         Object.keys(defaultParams).forEach((key) => {
-          const queryValue = this.$route.query[key];
+          const queryValue = Number.parseFloat(this.$route.query[key]);
           const defaultValue = defaultParams[key];
 
           this[key] = queryValue ? queryValue : defaultValue;
