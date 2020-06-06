@@ -93,7 +93,7 @@ export default class Dxf {
     this.addTag(0, 'DIMENSION');
     this.addTag(70, 3);
     this.addTag(15, x1);
-    this.addTag(25, y2);
+    this.addTag(25, y1);
     this.addTag(35, 0);
     this.addTag(10, x2);
     this.addTag(20, y2);
