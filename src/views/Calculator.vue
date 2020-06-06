@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="calculator">
     <fieldset>
       <legend>Front Panel</legend>
 
@@ -81,7 +81,7 @@
       <input id="angleHorizontalLeg" v-model.number="angleHorizontalLeg" type="number" />
       <br />
 
-      <label for="angleThickness">Thickness: </label>
+      <label for="angleThickness">Rail thickness: </label>
       <input id="angleThickness" v-model.number="angleThickness" type="number" />
       <br />
 
@@ -243,10 +243,40 @@
   import DxfParser from 'dxf-parser';
   import * as ThreeDxf from 'three-dxf';
 
+  const defaultParams = {
+    frontPanelWidth: 19,
+    frontPanelHeight: 1.75 - (1 / 32),
+    frontFullRails: false,
+    frontPartialRailWidth: 2,
+    rearFullRails: false,
+    rearPartialRailWidth: 2,
+    width: 17,
+    height: (1 + (3 / 4)) - (1 / 32),
+    depth: 12,
+    frontPanelThickness: 1 / 8,
+    rearPanelThickness: 1 / 16,
+    sideThickness: 1 / 16,
+    topThickness: 1 / 16,
+    bottomThickness: 1 / 16,
+    angleVerticalLeg: 1 / 2,
+    angleHorizontalLeg: 1 / 2,
+    angleThickness: 1 / 16,
+    verticalAngleLeg: 1 / 2,
+    verticalAngleThickness: 1 / 16,
+    screwFreeFitDiameter: 1 / 8,
+    pemDiameter: 1 / 4,
+    hasHandles: false,
+    handleHoleDiameter: 1 / 16,
+    handleHoleSpacing: 1 + (1 / 4),
+  }
+
   export default {
-    name: 'App', data: function () { return {
+    name: 'App',
+    data: function () {
+      return {
         url: window.location,
         dxfString: null,
+        ...defaultParams,
       };
     },
     computed: {
@@ -352,36 +382,13 @@
       frontCornerBracketFrontLegHoleDiameter: function () {
         return this.hasHandles ? this.handleHoleDiameter : this.pemDiameter;
       },
+      earWidth: function () {
+        return (this.frontPanelWidth - this.width) / 2;
+      },
     },
     methods: {
       generateUrl: function () {
-        const allowed = [
-          'frontPanelWidth',
-          'frontPanelHeight',
-          'frontFullRails',
-          'frontPartialRailWidth',
-          'rearFullRails',
-          'rearPartialRailWidth',
-          'width',
-          'height',
-          'depth',
-          'frontPanelThickness',
-          'rearPanelThickness',
-          'sideThickness',
-          'topThickness',
-          'bottomThickness',
-          'angleVerticalLeg',
-          'angleHorizontalLeg',
-          'angleThickness',
-          'verticalAngleLeg',
-          'verticalAngleThickness',
-          'screwFreeFitDiameter',
-          'pemDiameter',
-          'hasHandles',
-          'handleHoleDiameter',
-          'handleHoleSpacing',
-        ];
-        const inputParams = allowed.reduce((obj, key) => ({ ...obj, [key]: this[key] }), {});
+        const inputParams = Object.keys(defaultParams).reduce((obj, key) => ({ ...obj, [key]: this[key] }), {});
         const queryString = new URLSearchParams(inputParams);
         this.url = location.protocol + '//' + location.host + location.pathname + '?' + queryString;
       },
@@ -392,13 +399,13 @@
         const topBlock = new DxfBlock('top');
         topBlock.addRectangle(this.topWidth, this.topDepth);
         dxfDocument.addBlock(topBlock);
-        dxfDocument.addBlockReference('top', 0, this.angleVerticalLeg + 1 + this.frontPanelHeight + 1, 'outlines');
+        dxfDocument.addBlockReference('top', this.sideThickness, this.angleVerticalLeg + 1 + this.frontPanelHeight + 1, 'outlines');
 
         // Top front rail
         const topFrontRailBlock = new DxfBlock('top_front_rail');
         topFrontRailBlock.addRectangle(this.frontRailWidth, this.angleVerticalLeg);
         dxfDocument.addBlock(topFrontRailBlock);
-        dxfDocument.addBlockReference('top_front_rail', 0, this.frontPanelHeight + 1, 'outlines');
+        dxfDocument.addBlockReference('top_front_rail', (this.width - this.frontRailWidth) / 2, this.frontPanelHeight + 1, 'outlines');
 
         // Front panel
         const frontPanelBlock = new DxfBlock('front_panel');
@@ -411,25 +418,37 @@
         frontPanelBlock.addCircle(this.frontPanelWidth - this.frontPanelEndToCornerHole, this.frontPanelBottomEdgeToCornerHole, this.frontPanelCornerHoleDiameter / 2);
         frontPanelBlock.addCircle(this.frontPanelWidth - this.frontPanelEndToCornerHole, this.frontPanelHeight - this.frontPanelTopEdgeToCornerHole, this.frontPanelCornerHoleDiameter / 2);
         dxfDocument.addBlock(frontPanelBlock);
-        dxfDocument.addBlockReference('front_panel', 0, 0, 'outlines');
+        dxfDocument.addBlockReference('front_panel', -this.earWidth, 0, 'outlines');
 
         // Bottom front rail
         const bottomFrontRailBlock = new DxfBlock('bottom_front_rail');
         bottomFrontRailBlock.addRectangle(this.frontRailWidth, this.angleHorizontalLeg);
         dxfDocument.addBlock(bottomFrontRailBlock);
-        dxfDocument.addBlockReference('bottom_front_rail', 0, -(this.angleHorizontalLeg + 1), 'outlines');
+        dxfDocument.addBlockReference('bottom_front_rail', (this.width - this.frontRailWidth) / 2, -(this.angleHorizontalLeg + 1), 'outlines');
 
         // Bottom
         const bottomBlock = new DxfBlock('bottom');
         bottomBlock.addRectangle(this.bottomWidth, this.bottomDepth);
         dxfDocument.addBlock(bottomBlock);
-        dxfDocument.addBlockReference('bottom', 0, -(this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+        dxfDocument.addBlockReference('bottom', this.sideThickness, -(this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+
+        // Bottom rear rail
+        const bottomRearRailBlock = new DxfBlock('bottom_rear_rail');
+        bottomRearRailBlock.addRectangle(this.rearRailWidth, this.angleHorizontalLeg);
+        dxfDocument.addBlock(bottomRearRailBlock);
+        dxfDocument.addBlockReference('bottom_rear_rail', (this.width - this.rearRailWidth) / 2, -(this.angleHorizontalLeg + 1 + this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
 
         // Rear panel
         const rearPanelBlock = new DxfBlock('rear_panel');
         rearPanelBlock.addRectangle(this.rearPanelWidth, this.height);
         dxfDocument.addBlock(rearPanelBlock);
-        dxfDocument.addBlockReference('rear_panel', 0, -(this.height + 1 + this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+        dxfDocument.addBlockReference('rear_panel', this.sideThickness, -(this.height + 1 + this.angleHorizontalLeg + 1 + this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
+
+        // Top rear rail
+        const topRearRailBlock = new DxfBlock('top_rear_rail');
+        topRearRailBlock.addRectangle(this.rearRailWidth, this.angleHorizontalLeg);
+        dxfDocument.addBlock(topRearRailBlock);
+        dxfDocument.addBlockReference('top_rear_rail', (this.width - this.rearRailWidth) / 2, -(this.angleHorizontalLeg + 1 + this.height + 1 + this.angleHorizontalLeg + 1 + this.bottomDepth + 1 + this.angleHorizontalLeg + 1), 'outlines');
 
         this.dxfString = dxfDocument.toString();
         console.log(this.dxfString);
@@ -452,34 +471,7 @@
         document.body.removeChild(link);
       },
       initDefaultParams: function () {
-        const defaultParams = {
-          frontPanelWidth: 19,
-          frontPanelHeight: 1.75 - (1 / 32),
-          frontFullRails: false,
-          frontPartialRailWidth: 2,
-          rearFullRails: false,
-          rearPartialRailWidth: 2,
-          width: 17,
-          height: (1 + (3 / 4)) - (1 / 32),
-          depth: 12,
-          frontPanelThickness: 1 / 8,
-          rearPanelThickness: 1 / 16,
-          sideThickness: 1 / 16,
-          topThickness: 1 / 16,
-          bottomThickness: 1 / 16,
-          angleVerticalLeg: 1 / 2,
-          angleHorizontalLeg: 1 / 2,
-          angleThickness: 1 / 16,
-          verticalAngleLeg: 1 / 2,
-          verticalAngleThickness: 1 / 16,
-          screwFreeFitDiameter: 1 / 8,
-          pemDiameter: 1 / 4,
-          hasHandles: false,
-          handleHoleDiameter: 1 / 16,
-          handleHoleSpacing: 1 + (1 / 4),
-        };
-
-        Object.keys(defaultParams).forEach((key) => {
+        Object.keys(defaultParams).forEach(key => {
           const queryValue = this.$route.query[key];
           if (queryValue) {
             const valueAsNumber = Number.parseFloat(queryValue);
