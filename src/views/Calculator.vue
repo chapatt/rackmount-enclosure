@@ -246,9 +246,9 @@
   const defaultParams = {
     frontPanelWidth: 19,
     frontPanelHeight: 1.75 - (1 / 32),
-    frontFullRails: false,
+    frontFullRails: true,
     frontPartialRailWidth: 2,
-    rearFullRails: false,
+    rearFullRails: true,
     rearPartialRailWidth: 2,
     width: 17,
     height: (1 + (3 / 4)) - (1 / 32),
