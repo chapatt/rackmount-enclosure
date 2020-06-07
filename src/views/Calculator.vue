@@ -396,92 +396,99 @@
       // dxf should implement DxfEntitiesMixin
       // perspective should be 'top' or 'side'
       // uprightDirection should be 'top', 'right', 'bottom', or 'left'
-      addRailToDxf(dxf, flatLeg, uprightLeg, thickness, length, uprightDirection, perspective, tapered) {
-        /****************
-         * One, both, or no ends might be tapered!!!!!!!!!!
-         *
-         *
-         *
-         *
-         *
-         */
-        if (!tapered || perspective === 'side') {
+      // The start (in startMitered) is on the left when looking at the side view with the upright leg on top
+      addRailToDxf(dxf, flatLeg, uprightLeg, thickness, length, uprightDirection, perspective, startMitered, endMitered) {
+        if (perspective === 'side') {
           const isHorizontal = uprightDirection === 'top' || uprightDirection === 'bottom';
           dxf.addRectangle(isHorizontal ? length : flatLeg, isHorizontal ? flatLeg : length);
 
-          if (!tapered) {
-            switch (uprightDirection) {
-              case 'top':
-                dxf.addLine(0, flatLeg - thickness, length, flatLeg - thickness);
-                break;
-              case 'right':
-                dxf.addLine(flatLeg - thickness, 0, flatLeg - thickness, length);
-                break;
-              case 'bottom':
-                dxf.addLine(0, thickness, length, thickness);
-                break;
-              case 'left':
-                dxf.addLine(thickness, 0, thickness, length);
-                break;
-            }
-          } else {
-            let x1, x2, x3, x4, y1, y2, y3, y4;
-            switch (uprightDirection) {
-              case 'top':
-                x1 = thickness;
-                x2 = length - thickness;
-                x3 = uprightLeg;
-                x4 = length - uprightLeg;
-                y1 = 0;
-                y2 = flatLeg - thickness;
-                y3 = flatLeg;
-                break;
-              case 'right':
-                x1 = 0;
-                x2 = flatLeg - thickness;
-                x3 = flatLeg;
-                y1 = length - thickness;
-                y2 = thickness;
-                y3 = length - flatLeg;
-                y4 = flatLeg;
-                break;
-              case 'bottom':
-                x1 = length - thickness;
-                x2 = thickness;
-                x3 = uprightLeg;
-                x4 = length - uprightLeg;
-                y1 = flatLeg;
-                y2 = thickness;
-                y3 = 0;
-                break;
-              case 'left':
-                x1 = flatLeg;
-                x2 = thickness;
-                x3 = 0;
-                y1 = thickness;
-                y2 = length - thickness;
-                y3 = flatLeg;
-                y4 = length - flatLeg;
-                break;
-            }
-            switch (uprightDirection) {
-              case 'top':
-              case 'bottom':
+          let x1, x2, x3, x4, x5, x6, y1, y2, y3, y4, y5, y6;
+          switch (uprightDirection) {
+            case 'top':
+              x1 = thickness;
+              x2 = length - thickness;
+              x3 = uprightLeg;
+              x4 = length - uprightLeg;
+              x5 = 0;
+              x6 = length;
+              y1 = 0;
+              y2 = flatLeg - thickness;
+              y3 = flatLeg;
+              break;
+            case 'right':
+              x1 = 0;
+              x2 = flatLeg - thickness;
+              x3 = flatLeg;
+              y1 = length - thickness;
+              y2 = thickness;
+              y3 = length - flatLeg;
+              y4 = flatLeg;
+              y5 = length;
+              y6 = 0;
+              break;
+            case 'bottom':
+              x1 = length - thickness;
+              x2 = thickness;
+              x3 = uprightLeg;
+              x4 = length - uprightLeg;
+              x5 = 0;
+              x6 = length;
+              y1 = flatLeg;
+              y2 = thickness;
+              y3 = 0;
+              break;
+            case 'left':
+              x1 = flatLeg;
+              x2 = thickness;
+              x3 = 0;
+              y1 = thickness;
+              y2 = length - thickness;
+              y3 = flatLeg;
+              y4 = length - flatLeg;
+              y5 = 0;
+              y6 = length;
+              break;
+          }
+          let startX, endX;
+          let startY, endY;
+          switch (uprightDirection) {
+            case 'top':
+            case 'bottom':
+              if (startMitered) {
                 dxf.addLine(x1, y1, x1, y2);
-                dxf.addLine(x1, y2, x2, y2);
-                dxf.addLine(x2, y2, x2, y1);
                 dxf.addLine(x3, y2, x3, y3);
+                startX = x1
+              } else {
+                startX = x5;
+              }
+              if (endMitered) {
+                dxf.addLine(x2, y2, x2, y1);
                 dxf.addLine(x4, y2, x4, y3);
-                break;
-              case 'left':
-              case 'right':
+                endX = x2;
+              } else {
+                endX = x6;
+              }
+              dxf.addLine(startX, y2, endX, y2);
+              break;
+            case 'left':
+            case 'right':
+              if (startMitered) {
                 dxf.addLine(x1, y1, x2, y1);
-                dxf.addLine(x2, y1, x2, y2);
-                dxf.addLine(x2, y2, x1, y2);
                 dxf.addLine(x2, y3, x3, y3);
+                startY = y1;
+              } else {
+                startY = y5;
+              }
+              if (endMitered) {
+                dxf.addLine(x2, y2, x1, y2);
                 dxf.addLine(x2, y4, x3, y4);
-                break;
-            }
+                endY = y2;
+              } else {
+                endY = y6;
+              }
+
+              dxf.addLine(x2, startY, x2, endY);
+              break;
           }
         } else if (perspective === 'top') {
           console.log('not implemented')
@@ -499,7 +506,7 @@
         // Top front rail
         const topFrontRailBlock = new DxfBlock('top_front_rail');
 //        topFrontRailBlock.addRectangle(this.frontRailWidth, this.angleVerticalLeg);
-        this.addRailToDxf(topFrontRailBlock, this.angleVerticalLeg, this.angleHorizontalLeg, this.angleThickness, this.frontRailWidth, 'top', 'side', this.frontFullRails);
+        this.addRailToDxf(topFrontRailBlock, this.angleVerticalLeg, this.angleHorizontalLeg, this.angleThickness, this.frontRailWidth, 'top', 'side', this.frontFullRails, this.frontFullRails);
         dxfDocument.addBlock(topFrontRailBlock);
         dxfDocument.addBlockReference('top_front_rail', (this.width - this.frontRailWidth) / 2, this.frontPanelHeight + this.drawingSpacing, 'outlines');
 
@@ -555,7 +562,7 @@
         // Top Left Side Rail
         const topLeftSideRailBlock = new DxfBlock('top_left_side_rail');
 //        topLeftSideRailBlock.addRectangle(this.angleHorizontalLeg, this.sideRailDepth);
-        this.addRailToDxf(topLeftSideRailBlock, this.angleVerticalLeg, this.angleHorizontalLeg, this.angleThickness, this.sideRailDepth, 'right', 'side', true);
+        this.addRailToDxf(topLeftSideRailBlock, this.angleVerticalLeg, this.angleHorizontalLeg, this.angleThickness, this.sideRailDepth, 'right', 'side', this.frontFullRails, this.rearFullRails);
         dxfDocument.addBlock(topLeftSideRailBlock);
         dxfDocument.addBlockReference('top_left_side_rail', this.sideThickness + this.bottomWidth + this.angleHorizontalLeg + this.height + (3 * this.drawingSpacing), -(this.bottomDepth + this.angleHorizontalLeg + (2 * this.drawingSpacing)), 'outlines');
 
@@ -586,7 +593,7 @@
         // Top Right Side Rail
         const topRightSideRailBlock = new DxfBlock('top_right_side_rail');
 //        topRightSideRailBlock.addRectangle(this.angleHorizontalLeg, this.sideRailDepth);
-        this.addRailToDxf(topRightSideRailBlock, this.angleVerticalLeg, this.angleHorizontalLeg, this.angleThickness, this.sideRailDepth, 'left', 'side', true);
+        this.addRailToDxf(topRightSideRailBlock, this.angleVerticalLeg, this.angleHorizontalLeg, this.angleThickness, this.sideRailDepth, 'left', 'side', this.rearFullRails, this.frontFullRails);
         dxfDocument.addBlock(topRightSideRailBlock);
         dxfDocument.addBlockReference('top_right_side_rail', this.sideThickness - (this.angleHorizontalLeg + this.height + this.angleHorizontalLeg + (3 * this.drawingSpacing)), -(this.bottomDepth + this.angleHorizontalLeg + (2 * this.drawingSpacing)), 'outlines');
 
@@ -605,7 +612,7 @@
         // Top Rear Rail
         const topRearRailBlock = new DxfBlock('top_rear_rail');
 //        topRearRailBlock.addRectangle(this.rearRailWidth, this.angleHorizontalLeg);
-        this.addRailToDxf(topRearRailBlock, this.angleVerticalLeg, this.angleHorizontalLeg, this.angleThickness, this.rearRailWidth, 'bottom', 'side', this.rearFullRails);
+        this.addRailToDxf(topRearRailBlock, this.angleVerticalLeg, this.angleHorizontalLeg, this.angleThickness, this.rearRailWidth, 'bottom', 'side', this.rearFullRails, this.rearFullRails);
         dxfDocument.addBlock(topRearRailBlock);
         dxfDocument.addBlockReference('top_rear_rail', (this.width - this.rearRailWidth) / 2, -(this.angleHorizontalLeg + this.height + this.angleHorizontalLeg + this.bottomDepth + this.angleHorizontalLeg + (5 * this.drawingSpacing)), 'outlines');
 
