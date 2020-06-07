@@ -431,8 +431,8 @@
               x2 = thickness;
               x3 = uprightLeg;
               x4 = length - uprightLeg;
-              x5 = 0;
-              x6 = length;
+              x5 = length;
+              x6 = 0;
               y1 = flatLeg;
               y2 = thickness;
               y3 = 0;
@@ -491,7 +491,21 @@
               break;
           }
         } else if (perspective === 'top') {
-          console.log('not implemented')
+          switch (uprightDirection) {
+            case 'top':
+              x1;
+              x2;
+              x3;
+              x4;
+              x5;
+              x6;
+              y1;
+              y2;
+              y3;
+            case 'right':
+            case 'bottom':
+            case 'left':
+          }
         }
       },
       generateDxf: function () {
