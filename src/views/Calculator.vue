@@ -491,20 +491,99 @@
               break;
           }
         } else if (perspective === 'top') {
+          let x1, x2, x3, x4, x5, x6, startX1, endX1, startX2, endX2;
+          let y1, y2, y3, y4, y5, y6, startY1, endY1, startY2, endY2;
           switch (uprightDirection) {
             case 'top':
-              x1;
-              x2;
-              x3;
-              x4;
-              x5;
-              x6;
-              y1;
-              y2;
-              y3;
+              x1 = length;
+              x2 = 0;
+              x3 = length - flatLeg;
+              x4 = flatLeg;
+              x5 = length - thickness;
+              x6 = thickness;
+              y1 = flatLeg;
+              y2 = 0;
+              y3 = flatLeg - thickness;
+              break;
             case 'right':
+              x1 = flatLeg;
+              y1 = 0;
+              x2 = 0;
+              y2 = length;
+              y3 = flatLeg;
+              y4 = length - flatLeg;
+              x3 = flatLeg - thickness;
+              y5 = thickness;
+              y6 = length - thickness;
+              break;
             case 'bottom':
+              x1 = 0;
+              x2 = length
+              x3 = flatLeg;
+              x4 = length - flatLeg;
+              x5 = thickness;
+              x6 = length - thickness;
+              y1 = 0;
+              y2 = flatLeg;
+              y3 = thickness;
+              break;
             case 'left':
+              x1 = 0;
+              y1 = length;
+              x2 = flatLeg;
+              y2 = 0;
+              y3 = length - flatLeg;
+              y4 = flatLeg;
+              x3 = thickness;
+              y5 = length - thickness;
+              y6 = thickness;
+              break;
+          }
+          switch (uprightDirection) {
+            case 'top':
+            case 'bottom':
+              if (startMitered) {
+                startX1 = x3;
+                startX2 = x5;
+              } else {
+                startX1 = x1;
+                startX2 = x1;
+              }
+              if (endMitered) {
+                endX1 = x4;
+                endX2 = x6;
+              } else {
+                endX1 = x2;
+                endX2 = x2;
+              }
+              dxf.addLine(x1, y1, startX1, y2);
+              dxf.addLine(startX1, y2, endX1, y2);
+              dxf.addLine(endX1, y2, x2, y1);
+              dxf.addLine(x2, y1, x1, y1);
+              dxf.addLine(startX2, y3, endX2, y3);
+              break;
+            case 'right':
+            case 'left':
+              if (startMitered) {
+                startY1 = y3;
+                startY2 = y5;
+              } else {
+                startY1 = y1;
+                startY2 = y1;
+              }
+              if (endMitered) {
+                endY1 = y4;
+                endY2 = y6;
+              } else {
+                endY1 = y2;
+                endY2 = y2;
+              }
+              dxf.addLine(x1, y1, x2, startY1);
+              dxf.addLine(x2, startY1, x2, endY1);
+              dxf.addLine(x2, endY1, x1, y2);
+              dxf.addLine(x1, y2, x1, y1);
+              dxf.addLine(x3, startY2, x3, endY2);
+              break;
           }
         }
       },
@@ -538,7 +617,7 @@
 
         // Bottom front rail
         const bottomFrontRailBlock = new DxfBlock('bottom_front_rail');
-        bottomFrontRailBlock.addRectangle(this.frontRailWidth, this.angleHorizontalLeg);
+        this.addRailToDxf(bottomFrontRailBlock, this.angleHorizontalLeg, this.angleVerticalLeg, this.angleThickness, this.frontRailWidth, 'top', 'top', this.frontFullRails, this.frontFullRails);
         dxfDocument.addBlock(bottomFrontRailBlock);
         dxfDocument.addBlockReference('bottom_front_rail', (this.width - this.frontRailWidth) / 2, -(this.angleHorizontalLeg + this.drawingSpacing), 'outlines');
 
@@ -550,7 +629,7 @@
 
         // Bottom Left Side Rail
         const bottomLeftSideRailBlock = new DxfBlock('bottom_left_side_rail');
-        bottomLeftSideRailBlock.addRectangle(this.angleHorizontalLeg, this.sideRailDepth);
+        this.addRailToDxf(bottomLeftSideRailBlock, this.angleHorizontalLeg, this.angleVerticalLeg, this.angleThickness, this.sideRailDepth, 'right', 'top', this.rearFullRails, this.frontFullRails);
         dxfDocument.addBlock(bottomLeftSideRailBlock);
         dxfDocument.addBlockReference('bottom_left_side_rail', this.sideThickness + this.bottomWidth + this.drawingSpacing, -(this.bottomDepth + this.angleHorizontalLeg + (2 * this.drawingSpacing)), 'outlines');
 
@@ -580,7 +659,7 @@
 
         // Bottom Right Side Rail
         const bottomRightSideRailBlock = new DxfBlock('bottom_right_side_rail');
-        bottomRightSideRailBlock.addRectangle(this.angleHorizontalLeg, this.sideRailDepth);
+        this.addRailToDxf(bottomRightSideRailBlock, this.angleHorizontalLeg, this.angleVerticalLeg, this.angleThickness, this.sideRailDepth, 'left', 'top', this.frontFullRails, this.rearFullRails);
         dxfDocument.addBlock(bottomRightSideRailBlock);
         dxfDocument.addBlockReference('bottom_right_side_rail', this.sideThickness - (this.angleHorizontalLeg + this.drawingSpacing), -(this.bottomDepth + this.angleHorizontalLeg + (2 * this.drawingSpacing)), 'outlines');
 
@@ -610,7 +689,7 @@
 
         // Bottom Rear Rail
         const bottomRearRailBlock = new DxfBlock('bottom_rear_rail');
-        bottomRearRailBlock.addRectangle(this.rearRailWidth, this.angleHorizontalLeg);
+        this.addRailToDxf(bottomRearRailBlock, this.angleHorizontalLeg, this.angleVerticalLeg, this.angleThickness, this.rearRailWidth, 'bottom', 'top', this.rearFullRails, this.rearFullRails);
         dxfDocument.addBlock(bottomRearRailBlock);
         dxfDocument.addBlockReference('bottom_rear_rail', (this.width - this.rearRailWidth) / 2, -(this.angleHorizontalLeg + this.bottomDepth + this.angleHorizontalLeg + (3 * this.drawingSpacing)), 'outlines');
 
