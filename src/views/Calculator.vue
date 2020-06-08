@@ -665,12 +665,16 @@
         // Front Right Corner Bracket
         const frontRightCornerBracketBlock = new DxfBlock('front_right_corner_bracket');
         this.addRailToDxf(frontRightCornerBracketBlock, this.verticalAngleLeg, this.verticalAngleLeg, this.verticalAngleThickness, this.cornerBracketHeight, 'bottom', 'side', false, false);
+        frontRightCornerBracketBlock.addCircle(this.frontCornerBracketEndToHole, this.angleVerticalLeg / 2, this.frontCornerBracketFrontLegHoleDiameter / 2);
+        frontRightCornerBracketBlock.addCircle(this.cornerBracketHeight - this.frontCornerBracketEndToHole, this.angleVerticalLeg / 2, this.frontCornerBracketFrontLegHoleDiameter / 2);
         dxfDocument.addBlock(frontRightCornerBracketBlock);
         dxfDocument.addBlockReference('front_right_corner_bracket', this.sideThickness + this.bottomWidth + this.angleHorizontalLeg + (2 * this.drawingSpacing) + this.bottomThickness + this.angleThickness, -(this.frontPanelEdgeToBody + this.angleHorizontalLeg + this.drawingSpacing), 'outlines');
 
         // Rear Right Corner Bracket
         const rearRightCornerBracketBlock = new DxfBlock('rear_right_corner_bracket');
         this.addRailToDxf(rearRightCornerBracketBlock, this.verticalAngleLeg, this.verticalAngleLeg, this.verticalAngleThickness, this.cornerBracketHeight, 'bottom', 'side', false, false);
+        rearRightCornerBracketBlock.addCircle(this.cornerBracketEndToHole, this.angleVerticalLeg / 2, this.pemDiameter / 2);
+        rearRightCornerBracketBlock.addCircle(this.cornerBracketHeight - this.cornerBracketEndToHole, this.angleVerticalLeg / 2, this.pemDiameter / 2);
         dxfDocument.addBlock(rearRightCornerBracketBlock);
         dxfDocument.addBlockReference('rear_right_corner_bracket', this.sideThickness + this.bottomWidth + this.angleHorizontalLeg + (2 * this.drawingSpacing) + this.bottomThickness + this.angleThickness, -(this.frontPanelEdgeToBody + this.sideDepth + this.angleHorizontalLeg + this.verticalAngleLeg + (3 * this.drawingSpacing)), 'outlines');
 
@@ -705,12 +709,16 @@
         // Front Left Corner Bracket
         const frontLeftCornerBracketBlock = new DxfBlock('front_left_corner_bracket');
         this.addRailToDxf(frontLeftCornerBracketBlock, this.verticalAngleLeg, this.verticalAngleLeg, this.verticalAngleThickness, this.cornerBracketHeight, 'top', 'side', false, false);
+        frontLeftCornerBracketBlock.addCircle(this.cornerBracketEndToHole, this.angleVerticalLeg / 2, this.pemDiameter / 2);
+        frontLeftCornerBracketBlock.addCircle(this.cornerBracketHeight - this.cornerBracketEndToHole, this.angleVerticalLeg / 2, this.pemDiameter / 2);
         dxfDocument.addBlock(frontLeftCornerBracketBlock);
         dxfDocument.addBlockReference('front_left_corner_bracket', (this.sideThickness + this.bottomThickness + this.angleThickness) - (this.angleHorizontalLeg + this.height + (2 * this.drawingSpacing)), -(this.frontPanelEdgeToBody + this.angleHorizontalLeg + this.drawingSpacing), 'outlines');
 
         // Rear Left Corner Bracket
         const rearLeftCornerBracketBlock = new DxfBlock('rear_left_corner_bracket');
         this.addRailToDxf(rearLeftCornerBracketBlock, this.verticalAngleLeg, this.verticalAngleLeg, this.verticalAngleThickness, this.cornerBracketHeight, 'top', 'side', false, false);
+        rearLeftCornerBracketBlock.addCircle(this.cornerBracketEndToHole, this.angleVerticalLeg / 2, this.pemDiameter / 2);
+        rearLeftCornerBracketBlock.addCircle(this.cornerBracketHeight - this.cornerBracketEndToHole, this.angleVerticalLeg / 2, this.pemDiameter / 2);
         dxfDocument.addBlock(rearLeftCornerBracketBlock);
         dxfDocument.addBlockReference('rear_left_corner_bracket', (this.sideThickness + this.bottomThickness + this.angleThickness) - (this.angleHorizontalLeg + this.height + (2 * this.drawingSpacing)), -(this.frontPanelEdgeToBody + this.sideDepth + this.angleHorizontalLeg + this.verticalAngleLeg + (3 * this.drawingSpacing)), 'outlines');
 
@@ -728,7 +736,7 @@
         const bottomRearRailBlock = new DxfBlock('bottom_rear_rail');
         this.addRailToDxf(bottomRearRailBlock, this.angleHorizontalLeg, this.angleVerticalLeg, this.angleThickness, this.rearRailWidth, 'top', 'top', this.rearFullRails, this.rearFullRails);
         bottomRearRailBlock.addCircle(this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
-        bottomRearRailBlock.addCircle(this.topWidth - this.topSideToOneQuarter, this.angleHorizontalLeg /2, this.pemDiameter / 2);
+        bottomRearRailBlock.addCircle(this.topWidth - this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
         dxfDocument.addBlock(bottomRearRailBlock);
         dxfDocument.addBlockReference('bottom_rear_rail', (this.width - this.rearRailWidth) / 2, -(this.frontPanelEdgeToBody + this.angleHorizontalLeg + this.bottomDepth + this.angleHorizontalLeg + (3 * this.drawingSpacing)), 'outlines');
 
