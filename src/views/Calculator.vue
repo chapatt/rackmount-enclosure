@@ -774,14 +774,14 @@
         // Rear Panel
         const rearPanelBlock = new DxfBlock('rear_panel');
         rearPanelBlock.addRectangle(this.rearPanelWidth, this.height);
-        rearPanelBlock.addCircle(this.rearPanelEndToCornerHole, this.rearPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
-        rearPanelBlock.addCircle(this.rearPanelEndToCornerHole, this.height - this.rearPanelTopEdgeToHole, this.screwFreeFitDiameter / 2);
-        rearPanelBlock.addCircle(this.rearPanelWidth - this.rearPanelEndToCornerHole, this.rearPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
-        rearPanelBlock.addCircle(this.rearPanelWidth - this.rearPanelEndToCornerHole, this.height - this.rearPanelTopEdgeToHole, this.screwFreeFitDiameter / 2);
-        rearPanelBlock.addCircle(this.topSideToOneQuarter, this.rearPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
-        rearPanelBlock.addCircle(this.topSideToOneQuarter, this.height - this.rearPanelTopEdgeToHole, this.screwFreeFitDiameter / 2);
-        rearPanelBlock.addCircle(this.rearPanelWidth - this.topSideToOneQuarter, this.rearPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
-        rearPanelBlock.addCircle(this.rearPanelWidth - this.topSideToOneQuarter, this.height - this.rearPanelTopEdgeToHole, this.screwFreeFitDiameter / 2);
+        rearPanelBlock.addCircle(this.rearPanelEndToCornerHole, this.rearPanelTopEdgeToHole, this.screwFreeFitDiameter / 2);
+        rearPanelBlock.addCircle(this.rearPanelEndToCornerHole, this.height - this.rearPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
+        rearPanelBlock.addCircle(this.rearPanelWidth - this.rearPanelEndToCornerHole, this.rearPanelTopEdgeToHole, this.screwFreeFitDiameter / 2);
+        rearPanelBlock.addCircle(this.rearPanelWidth - this.rearPanelEndToCornerHole, this.height - this.rearPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
+        rearPanelBlock.addCircle(this.topSideToOneQuarter, this.rearPanelTopEdgeToHole, this.screwFreeFitDiameter / 2);
+        rearPanelBlock.addCircle(this.topSideToOneQuarter, this.height - this.rearPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
+        rearPanelBlock.addCircle(this.rearPanelWidth - this.topSideToOneQuarter, this.rearPanelTopEdgeToHole, this.screwFreeFitDiameter / 2);
+        rearPanelBlock.addCircle(this.rearPanelWidth - this.topSideToOneQuarter, this.height - this.rearPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
         dxfDocument.addBlock(rearPanelBlock);
         dxfDocument.addBlockReference('rear_panel', this.sideThickness, -(this.frontPanelEdgeToBody + this.height + this.angleHorizontalLeg + this.bottomDepth + this.angleHorizontalLeg + (4 * this.drawingSpacing)), 'outlines');
 
