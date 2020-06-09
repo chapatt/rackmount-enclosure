@@ -743,7 +743,7 @@
         frontLeftCornerBracketBlock.addCircle(this.cornerBracketEndToHole, this.angleVerticalLeg / 2, this.pemDiameter / 2);
         frontLeftCornerBracketBlock.addCircle(this.cornerBracketHeight - this.cornerBracketEndToHole, this.angleVerticalLeg / 2, this.pemDiameter / 2);
         dxfDocument.addBlock(frontLeftCornerBracketBlock);
-        dxfDocument.addBlockReference('front_left_corner_bracket', (this.sideThickness + this.bottomThickness + this.angleThickness) - (this.angleHorizontalLeg + this.height + (2 * this.drawingSpacing)), -(this.frontPanelEdgeToBody + this.angleHorizontalLeg + this.drawingSpacing), 'outlines');
+        dxfDocument.addBlockReference('front_left_corner_bracket', (this.sideThickness + this.topThickness + this.angleThickness) - (this.angleHorizontalLeg + this.height + (2 * this.drawingSpacing)), -(this.frontPanelEdgeToBody + this.angleHorizontalLeg + this.drawingSpacing), 'outlines');
 
         // Rear Left Corner Bracket
         const rearLeftCornerBracketBlock = new DxfBlock('rear_left_corner_bracket');
@@ -751,7 +751,7 @@
         rearLeftCornerBracketBlock.addCircle(this.cornerBracketEndToHole, this.angleVerticalLeg / 2, this.pemDiameter / 2);
         rearLeftCornerBracketBlock.addCircle(this.cornerBracketHeight - this.cornerBracketEndToHole, this.angleVerticalLeg / 2, this.pemDiameter / 2);
         dxfDocument.addBlock(rearLeftCornerBracketBlock);
-        dxfDocument.addBlockReference('rear_left_corner_bracket', (this.sideThickness + this.bottomThickness + this.angleThickness) - (this.angleHorizontalLeg + this.height + (2 * this.drawingSpacing)), -(this.frontPanelEdgeToBody + this.sideDepth + this.angleHorizontalLeg + this.verticalAngleLeg + (3 * this.drawingSpacing)), 'outlines');
+        dxfDocument.addBlockReference('rear_left_corner_bracket', (this.sideThickness + this.topThickness + this.angleThickness) - (this.angleHorizontalLeg + this.height + (2 * this.drawingSpacing)), -(this.frontPanelEdgeToBody + this.sideDepth + this.angleHorizontalLeg + this.verticalAngleLeg + (3 * this.drawingSpacing)), 'outlines');
 
         // Top Left Side Rail
         const topLeftSideRailBlock = new DxfBlock('top_left_side_rail');
