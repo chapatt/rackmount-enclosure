@@ -398,6 +398,12 @@
       topSideToOneQuarter: function () {
         return this.topWidth / 4;
       },
+      topSideToFrontRailEnd: function () {
+        return (this.topWidth - this.frontRailWidth) / 2;
+      },
+      topSideToRearRailEnd: function () {
+        return (this.topWidth - this.rearRailWidth) / 2;
+      },
     },
     methods: {
       generateUrl: function () {
@@ -609,20 +615,29 @@
         topBlock.addCircle(this.angleHorizontalLeg / 2, this.topDepth - this.topFrontToOneQuarter, this.screwFreeFitDiameter / 2);
         topBlock.addCircle(this.topWidth - (this.angleHorizontalLeg / 2), this.topFrontToOneQuarter, this.screwFreeFitDiameter / 2);
         topBlock.addCircle(this.topWidth - (this.angleHorizontalLeg / 2), this.topDepth - this.topFrontToOneQuarter, this.screwFreeFitDiameter / 2);
-        topBlock.addCircle(this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.screwFreeFitDiameter / 2);
-        topBlock.addCircle(this.topWidth - this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.screwFreeFitDiameter / 2);
-        topBlock.addCircle(this.topSideToOneQuarter, this.topDepth - (this.angleHorizontalLeg / 2), this.screwFreeFitDiameter / 2);
-        topBlock.addCircle(this.topWidth - this.topSideToOneQuarter, this.topDepth - (this.angleHorizontalLeg / 2), this.screwFreeFitDiameter / 2);
+        if (this.frontFullRails) {
+          topBlock.addCircle(this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.screwFreeFitDiameter / 2);
+          topBlock.addCircle(this.topWidth - this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.screwFreeFitDiameter / 2);
+        }
+        if (this.rearFullRails) {
+          topBlock.addCircle(this.topSideToOneQuarter, this.topDepth - (this.angleHorizontalLeg / 2), this.screwFreeFitDiameter / 2);
+          topBlock.addCircle(this.topWidth - this.topSideToOneQuarter, this.topDepth - (this.angleHorizontalLeg / 2), this.screwFreeFitDiameter / 2);
+        }
         dxfDocument.addBlock(topBlock);
         dxfDocument.addBlockReference('top', this.sideThickness, -this.frontPanelEdgeToBody + this.angleVerticalLeg + this.frontPanelHeight + (2 * this.drawingSpacing), 'outlines');
 
         // Top Front Rail
         const topFrontRailBlock = new DxfBlock('top_front_rail');
         this.addRailToDxf(topFrontRailBlock, this.angleVerticalLeg, this.angleHorizontalLeg, this.angleThickness, this.frontRailWidth, 'bottom', 'side', this.frontFullRails, this.frontFullRails);
-        topFrontRailBlock.addCircle(this.frontRailEndToCornerHole, this.frontRailEdgeToCornerHole, this.frontRailCornerHoleDiameter / 2);
-        topFrontRailBlock.addCircle(this.frontRailWidth - this.frontRailEndToCornerHole, this.frontRailEdgeToCornerHole,  this.frontRailCornerHoleDiameter / 2);
-        topFrontRailBlock.addCircle(this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
-        topFrontRailBlock.addCircle(this.topWidth - this.topSideToOneQuarter, this.angleHorizontalLeg /2, this.pemDiameter / 2);
+        if (this.frontFullRails) {
+          topFrontRailBlock.addCircle(this.frontRailEndToCornerHole, this.frontRailEdgeToCornerHole, this.frontRailCornerHoleDiameter / 2);
+          topFrontRailBlock.addCircle(this.frontRailWidth - this.frontRailEndToCornerHole, this.frontRailEdgeToCornerHole,  this.frontRailCornerHoleDiameter / 2);
+          topFrontRailBlock.addCircle(this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
+          topFrontRailBlock.addCircle(this.topWidth - this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
+        } else {
+          topFrontRailBlock.addCircle(this.frontRailEndToCornerHole, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
+          topFrontRailBlock.addCircle(this.frontRailWidth - this.frontRailEndToCornerHole, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
+        }
         dxfDocument.addBlock(topFrontRailBlock);
         dxfDocument.addBlockReference('top_front_rail', (this.width - this.frontRailWidth) / 2, -this.frontPanelEdgeToBody + this.frontPanelHeight + this.drawingSpacing, 'outlines');
 
@@ -636,20 +651,25 @@
         frontPanelBlock.addCircle(this.frontPanelEndToCornerHole, this.frontPanelHeight - this.frontPanelTopEdgeToCornerHole, this.frontPanelCornerHoleDiameter / 2);
         frontPanelBlock.addCircle(this.frontPanelWidth - this.frontPanelEndToCornerHole, this.frontPanelBottomEdgeToCornerHole, this.frontPanelCornerHoleDiameter / 2);
         frontPanelBlock.addCircle(this.frontPanelWidth - this.frontPanelEndToCornerHole, this.frontPanelHeight - this.frontPanelTopEdgeToCornerHole, this.frontPanelCornerHoleDiameter / 2);
-        frontPanelBlock.addCircle(this.frontPanelEndToBodyInside + this.topSideToOneQuarter, this.frontPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
-        frontPanelBlock.addCircle(this.frontPanelEndToBodyInside + this.topSideToOneQuarter, this.frontPanelHeight - this.frontPanelTopEdgeToHole, this.screwFreeFitDiameter / 2);
-        frontPanelBlock.addCircle(this.frontPanelWidth - (this.frontPanelEndToBodyInside + this.topSideToOneQuarter), this.frontPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
-        frontPanelBlock.addCircle(this.frontPanelWidth - (this.frontPanelEndToBodyInside + this.topSideToOneQuarter), this.frontPanelHeight - this.frontPanelTopEdgeToHole, this.screwFreeFitDiameter / 2);
+        if (this.frontFullRails) {
+          frontPanelBlock.addCircle(this.frontPanelEndToBodyInside + this.topSideToOneQuarter, this.frontPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
+          frontPanelBlock.addCircle(this.frontPanelEndToBodyInside + this.topSideToOneQuarter, this.frontPanelHeight - this.frontPanelTopEdgeToHole, this.screwFreeFitDiameter / 2);
+          frontPanelBlock.addCircle(this.frontPanelWidth - (this.frontPanelEndToBodyInside + this.topSideToOneQuarter), this.frontPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
+          frontPanelBlock.addCircle(this.frontPanelWidth - (this.frontPanelEndToBodyInside + this.topSideToOneQuarter), this.frontPanelHeight - this.frontPanelTopEdgeToHole, this.screwFreeFitDiameter / 2);
+        }
         dxfDocument.addBlock(frontPanelBlock);
         dxfDocument.addBlockReference('front_panel', -this.earWidth, -this.frontPanelEdgeToBody, 'outlines');
 
         // Bottom Front Rail
         const bottomFrontRailBlock = new DxfBlock('bottom_front_rail');
         this.addRailToDxf(bottomFrontRailBlock, this.angleHorizontalLeg, this.angleVerticalLeg, this.angleThickness, this.frontRailWidth, 'bottom', 'top', this.frontFullRails, this.frontFullRails);
-        bottomFrontRailBlock.addCircle(this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
-        bottomFrontRailBlock.addCircle(this.topWidth - this.topSideToOneQuarter, this.angleHorizontalLeg /2, this.pemDiameter / 2);
-        bottomFrontRailBlock.addCircle(this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
-        bottomFrontRailBlock.addCircle(this.topWidth - this.topSideToOneQuarter, this.angleHorizontalLeg /2, this.pemDiameter / 2);
+        if (this.frontFullRails) {
+          bottomFrontRailBlock.addCircle(this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
+          bottomFrontRailBlock.addCircle(this.topWidth - this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
+        } else {
+          bottomFrontRailBlock.addCircle(this.frontRailEndToCornerHole, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
+          bottomFrontRailBlock.addCircle(this.frontRailWidth - this.frontRailEndToCornerHole, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
+        }
         dxfDocument.addBlock(bottomFrontRailBlock);
         dxfDocument.addBlockReference('bottom_front_rail', (this.width - this.frontRailWidth) / 2, -(this.frontPanelEdgeToBody + this.angleHorizontalLeg + this.drawingSpacing), 'outlines');
 
@@ -660,10 +680,20 @@
         bottomBlock.addCircle(this.angleHorizontalLeg / 2, this.bottomDepth - this.topFrontToOneQuarter, this.screwFreeFitDiameter / 2);
         bottomBlock.addCircle(this.bottomWidth - (this.angleHorizontalLeg / 2), this.topFrontToOneQuarter, this.screwFreeFitDiameter / 2);
         bottomBlock.addCircle(this.bottomWidth - (this.angleHorizontalLeg / 2), this.bottomDepth - this.topFrontToOneQuarter, this.screwFreeFitDiameter / 2);
-        bottomBlock.addCircle(this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.screwFreeFitDiameter / 2);
-        bottomBlock.addCircle(this.bottomWidth - this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.screwFreeFitDiameter / 2);
-        bottomBlock.addCircle(this.topSideToOneQuarter, this.bottomDepth - (this.angleHorizontalLeg / 2), this.screwFreeFitDiameter / 2);
-        bottomBlock.addCircle(this.bottomWidth - this.topSideToOneQuarter, this.bottomDepth - (this.angleHorizontalLeg / 2), this.screwFreeFitDiameter / 2);
+        if (this.frontFullRails) {
+          bottomBlock.addCircle(this.topSideToOneQuarter, this.bottomDepth - (this.angleHorizontalLeg / 2), this.screwFreeFitDiameter / 2);
+          bottomBlock.addCircle(this.bottomWidth - this.topSideToOneQuarter, this.bottomDepth - (this.angleHorizontalLeg / 2), this.screwFreeFitDiameter / 2);
+        } else {
+          bottomBlock.addCircle(this.topSideToFrontRailEnd + this.frontRailEndToCornerHole, this.bottomDepth - this.angleHorizontalLeg / 2, this.screwFreeFitDiameter / 2);
+          bottomBlock.addCircle(this.bottomWidth - (this.topSideToFrontRailEnd + this.frontRailEndToCornerHole), this.bottomDepth - this.angleHorizontalLeg / 2, this.screwFreeFitDiameter / 2);
+        }
+        if (this.rearFullRails) {
+          bottomBlock.addCircle(this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.screwFreeFitDiameter / 2);
+          bottomBlock.addCircle(this.bottomWidth - this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.screwFreeFitDiameter / 2);
+        } else {
+          bottomBlock.addCircle(this.topSideToRearRailEnd + this.rearRailEndToCornerHole, this.angleHorizontalLeg / 2, this.screwFreeFitDiameter / 2);
+          bottomBlock.addCircle(this.bottomWidth - (this.topSideToRearRailEnd + this.rearRailEndToCornerHole), this.angleHorizontalLeg / 2, this.screwFreeFitDiameter / 2);
+        }
         dxfDocument.addBlock(bottomBlock);
         dxfDocument.addBlockReference('bottom', this.sideThickness, -(this.frontPanelEdgeToBody + this.bottomDepth + this.angleHorizontalLeg + (2 * this.drawingSpacing)), 'outlines');
 
@@ -766,8 +796,13 @@
         // Bottom Rear Rail
         const bottomRearRailBlock = new DxfBlock('bottom_rear_rail');
         this.addRailToDxf(bottomRearRailBlock, this.angleHorizontalLeg, this.angleVerticalLeg, this.angleThickness, this.rearRailWidth, 'top', 'top', this.rearFullRails, this.rearFullRails);
-        bottomRearRailBlock.addCircle(this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
-        bottomRearRailBlock.addCircle(this.topWidth - this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
+        if (this.rearFullRails) {
+          bottomRearRailBlock.addCircle(this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
+          bottomRearRailBlock.addCircle(this.topWidth - this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
+        } else {
+          bottomRearRailBlock.addCircle(this.rearRailEndToCornerHole, this.angleVerticalLeg / 2, this.pemDiameter / 2);
+          bottomRearRailBlock.addCircle(this.rearRailWidth - this.rearRailEndToCornerHole, this.angleVerticalLeg / 2, this.pemDiameter / 2);
+        }
         dxfDocument.addBlock(bottomRearRailBlock);
         dxfDocument.addBlockReference('bottom_rear_rail', (this.width - this.rearRailWidth) / 2, -(this.frontPanelEdgeToBody + this.angleHorizontalLeg + this.bottomDepth + this.angleHorizontalLeg + (3 * this.drawingSpacing)), 'outlines');
 
@@ -778,10 +813,12 @@
         rearPanelBlock.addCircle(this.rearPanelEndToCornerHole, this.height - this.rearPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
         rearPanelBlock.addCircle(this.rearPanelWidth - this.rearPanelEndToCornerHole, this.rearPanelTopEdgeToHole, this.screwFreeFitDiameter / 2);
         rearPanelBlock.addCircle(this.rearPanelWidth - this.rearPanelEndToCornerHole, this.height - this.rearPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
-        rearPanelBlock.addCircle(this.topSideToOneQuarter, this.rearPanelTopEdgeToHole, this.screwFreeFitDiameter / 2);
-        rearPanelBlock.addCircle(this.topSideToOneQuarter, this.height - this.rearPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
-        rearPanelBlock.addCircle(this.rearPanelWidth - this.topSideToOneQuarter, this.rearPanelTopEdgeToHole, this.screwFreeFitDiameter / 2);
-        rearPanelBlock.addCircle(this.rearPanelWidth - this.topSideToOneQuarter, this.height - this.rearPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
+        if (this.rearFullRails) {
+          rearPanelBlock.addCircle(this.topSideToOneQuarter, this.rearPanelTopEdgeToHole, this.screwFreeFitDiameter / 2);
+          rearPanelBlock.addCircle(this.topSideToOneQuarter, this.height - this.rearPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
+          rearPanelBlock.addCircle(this.rearPanelWidth - this.topSideToOneQuarter, this.rearPanelTopEdgeToHole, this.screwFreeFitDiameter / 2);
+          rearPanelBlock.addCircle(this.rearPanelWidth - this.topSideToOneQuarter, this.height - this.rearPanelBottomEdgeToHole, this.screwFreeFitDiameter / 2);
+        }
         dxfDocument.addBlock(rearPanelBlock);
         dxfDocument.addBlockReference('rear_panel', this.sideThickness, -(this.frontPanelEdgeToBody + this.height + this.angleHorizontalLeg + this.bottomDepth + this.angleHorizontalLeg + (4 * this.drawingSpacing)), 'outlines');
 
@@ -790,8 +827,10 @@
         this.addRailToDxf(topRearRailBlock, this.angleVerticalLeg, this.angleHorizontalLeg, this.angleThickness, this.rearRailWidth, 'top', 'side', this.rearFullRails, this.rearFullRails);
         topRearRailBlock.addCircle(this.rearRailEndToCornerHole, this.angleVerticalLeg / 2, this.rearRailCornerHoleDiameter / 2);
         topRearRailBlock.addCircle(this.rearRailWidth - this.rearRailEndToCornerHole, this.angleVerticalLeg / 2, this.rearRailCornerHoleDiameter / 2);
-        topRearRailBlock.addCircle(this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
-        topRearRailBlock.addCircle(this.topWidth - this.topSideToOneQuarter, this.angleHorizontalLeg /2, this.pemDiameter / 2);
+        if (this.rearFullRails) {
+          topRearRailBlock.addCircle(this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
+          topRearRailBlock.addCircle(this.topWidth - this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
+        }
         dxfDocument.addBlock(topRearRailBlock);
         dxfDocument.addBlockReference('top_rear_rail', (this.width - this.rearRailWidth) / 2, -(this.frontPanelEdgeToBody + this.angleHorizontalLeg + this.height + this.angleHorizontalLeg + this.bottomDepth + this.angleHorizontalLeg + (5 * this.drawingSpacing)), 'outlines');
 
