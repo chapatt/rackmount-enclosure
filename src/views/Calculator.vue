@@ -240,9 +240,6 @@
   import DxfDocument from '../Dxf/DxfDocument';
   import DxfBlock from '../Dxf/DxfBlock';
 
-  import DxfParser from 'dxf-parser';
-  import * as ThreeDxf from 'three-dxf';
-
   const defaultParams = {
     frontPanelWidth: 19,
     frontPanelHeight: (1 + (3 / 4)) - (1 / 32),
@@ -836,11 +833,6 @@
 
         this.dxfString = dxfDocument.toString();
         console.log(this.dxfString);
-
-        const parser = new DxfParser();
-        const dxfObject = parser.parseSync(this.dxfString);
-        console.log(dxfObject);
-        new ThreeDxf.Viewer(dxfObject, this.$refs.dxfView, 400, 400);
       },
       downloadDxf: function () {
         this.downloadText('drawing.dxf', this.dxfString);
@@ -893,7 +885,5 @@
     margin-bottom: 1em;
   }
   .dxf-view {
-    width: 400px;
-    height: 400px;
   }
 </style>
