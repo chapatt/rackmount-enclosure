@@ -12,9 +12,7 @@ export default class DxfBlock extends DxfEntitiesMixin(Object) {
     let dxf = new Dxf();
 
     dxf.beginBlock(this.name);
-      dxf.beginSection('ENTITIES');
-        this._insertEntities(dxf);
-      dxf.endSection(); // ENTITIES
+      this._insertEntities(dxf);
     dxf.endBlock(); // BLOCK
 
     return dxf.toString();
