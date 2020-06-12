@@ -2307,7 +2307,7 @@ commander@2.17.x:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
   integrity sha512-wPMUt6FnH2yzG95SA6mzjQOEKUU3aLaDEmzs1ti+1E9h+CsrZghRlqEM/EJ4KscsQVG8uNN4uVreUeT8+drlgg==
 
-commander@^2.18.0, commander@^2.20.0:
+commander@^2.18.0, commander@^2.20.0, commander@^2.20.3:
   version "2.20.3"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
   integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
@@ -3005,6 +3005,17 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     inherits "^2.0.1"
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
+
+dxf@^4.4.1:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/dxf/-/dxf-4.4.1.tgz#b886d889c4d5d16a50ca5a01c8511012e2e162df"
+  integrity sha512-9sThOg8em7XIK5BD0Z54tzWwu7vsecKygLH0mHZe7KtRN/U7q3CexOiS+MQdulfRj/b52swdkK5PV0sx1xGL5w==
+  dependencies:
+    commander "^2.20.3"
+    lodash "^4.17.15"
+    pretty-data "^0.40.0"
+    round10 "^1.0.3"
+    vecks "^3.9.0"
 
 easy-stack@^1.0.0:
   version "1.0.0"
@@ -6286,6 +6297,11 @@ prettier@^1.18.2:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
   integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
 
+pretty-data@^0.40.0:
+  version "0.40.0"
+  resolved "https://registry.yarnpkg.com/pretty-data/-/pretty-data-0.40.0.tgz#572aa8ea23467467ab94b6b5266a6fd9c8fddd72"
+  integrity sha1-Vyqo6iNGdGerlLa1Jmpv2cj93XI=
+
 pretty-error@^2.0.2:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/pretty-error/-/pretty-error-2.1.1.tgz#5f4f87c8f91e5ae3f3ba87ab4cf5e03b1a17f1a3"
@@ -6754,6 +6770,11 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
   dependencies:
     hash-base "^3.0.0"
     inherits "^2.0.1"
+
+round10@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/round10/-/round10-1.0.3.tgz#86110f46a10874a1931da7fdd5e06d1857a8e4d0"
+  integrity sha1-hhEPRqEIdKGTHaf91eBtGFeo5NA=
 
 run-async@^2.4.0:
   version "2.4.1"
@@ -7887,6 +7908,11 @@ vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
+
+vecks@^3.9.0:
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/vecks/-/vecks-3.9.0.tgz#1927cf90f9e859762836b70a1e86679dd474786c"
+  integrity sha512-ZHdBNUsVyi2jTXtGLNXi+knGqNUdL4qOLiXRfroOJ64Ho/402Ky0QTAk8C/c0jqz4VfxdzGfgmjS+P7ie8JoNA==
 
 vendors@^1.0.0:
   version "1.0.4"

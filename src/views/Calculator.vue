@@ -121,10 +121,11 @@
     <button v-on:click="initDefaultParams()">Reset</button>
 
     <button v-on:click="generateDxf()">Generate DXF</button>
+    <button v-on:click="testDxf()">Test DXF</button>
 
     <button v-if="this.dxfString" v-on:click="downloadDxf()">Download DXF</button>
 
-    <div ref="dxfView" class="dxf-view" />
+    <svg ref="dxfView" class="dxf-view" />
 
     <div>
       <h2>Front Panel</h2>
@@ -239,6 +240,8 @@
 <script>
   import DxfDocument from '../Dxf/DxfDocument';
   import DxfBlock from '../Dxf/DxfBlock';
+
+  import { Helper } from 'dxf';
 
   const defaultParams = {
     frontPanelWidth: 19,
@@ -602,6 +605,21 @@
           }
         }
       },
+      testDxf: function () {
+        const dxfDocument = new DxfDocument('English');
+
+        const block1 = new DxfBlock('block1');
+        block1.addRectangle(2, 2);
+        dxfDocument.addBlock(block1);
+        dxfDocument.addBlockReference('block1', -1, -1, '0');
+
+        this.dxfString = dxfDocument.toString();
+        console.log(this.dxfString);
+
+        const helper = new Helper(this.dxfString);
+        const svg = helper.toSVG();
+        this.$refs.dxfView.innerHTML = svg;
+      },
       generateDxf: function () {
         const dxfDocument = new DxfDocument('English');
 
@@ -833,6 +851,10 @@
 
         this.dxfString = dxfDocument.toString();
         console.log(this.dxfString);
+
+        const helper = new Helper(this.dxfString);
+        const svg = helper.toSVG();
+        this.$refs.dxfView.innerHTML = svg;
       },
       downloadDxf: function () {
         this.downloadText('drawing.dxf', this.dxfString);
