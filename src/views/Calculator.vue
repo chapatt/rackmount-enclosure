@@ -120,11 +120,13 @@
     <input v-model="url" type="text" readonly />
     <button v-on:click="initDefaultParams()">Reset</button>
 
-    <button v-on:click="generateDxf()">Generate DXF</button>
+    <button v-on:click="generateDrawing()">Generate Drawing</button>
 
     <button v-if="this.dxfString" v-on:click="downloadDxf()">Download DXF</button>
 
-    <div ref="dxfView" class="dxf-view" />
+    <button v-if="this.svgString" v-on:click="downloadSvg()">Download SVG</button>
+
+    <div v-html="svgString" class="dxf-view" />
   </div>
 </template>
 
@@ -167,6 +169,7 @@
       return {
         url: window.location,
         dxfString: null,
+        svgString: null,
         drawingSpacing: 1,
         ...defaultParams,
       };
@@ -496,7 +499,7 @@
           }
         }
       },
-      generateDxf: function () {
+      generateDrawing: function () {
         const dxfDocument = new DxfDocument('English');
 
         // Top
@@ -726,14 +729,15 @@
         dxfDocument.addBlockReference('top_rear_rail', (this.width - this.rearRailWidth) / 2, -(this.frontPanelEdgeToBody + this.angleHorizontalLeg + this.height + this.angleHorizontalLeg + this.bottomDepth + this.angleHorizontalLeg + (5 * this.drawingSpacing)), 'outlines');
 
         this.dxfString = dxfDocument.toString();
-        console.log(this.dxfString);
 
         const helper = new Helper(this.dxfString);
-        const svg = helper.toSVG();
-        this.$refs.dxfView.innerHTML = svg;
+        this.svgString = helper.toSVG();
       },
       downloadDxf: function () {
         this.downloadText('drawing.dxf', this.dxfString);
+      },
+      downloadSvg: function () {
+        this.downloadText('drawing.svg', this.svgString);
       },
       downloadText: function (filename, text) {
         const link = document.createElement('a');
