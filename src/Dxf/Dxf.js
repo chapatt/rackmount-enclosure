@@ -33,9 +33,15 @@ export default class Dxf {
     this.addTag(0, 'ENDTAB');
   }
 
-  beginBlock(name) {
+  beginBlock(name, layer) {
     this.addTag(0, 'BLOCK');
     this.addTag(2, name);
+    this.addTag(3, name);
+    layer && this.addTag(8, layer);
+    this.addTag(70, 0);
+    this.addTag(10, 0);
+    this.addTag(20, 0);
+    this.addTag(30, 0);
   }
 
   endBlock() {
@@ -83,9 +89,11 @@ export default class Dxf {
     this.addTag(10, extX);
     this.addTag(20, extY);
     this.addTag(30, 0);
-    this.addTag(11, textX);
-    this.addTag(21, textY);
-    this.addTag(31, 0);
+    if (textX && textY) {
+      this.addTag(11, textX);
+      this.addTag(21, textY);
+      this.addTag(31, 0);
+    }
     layer && this.addTag(8, layer);
   }
 
