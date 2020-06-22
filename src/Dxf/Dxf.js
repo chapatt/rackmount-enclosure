@@ -48,15 +48,16 @@ export default class Dxf {
     this.addTag(0, 'ENDBLK');
   }
 
-  addLine(x1, y1, x2, y2, layer) {
+  addLine(x1, y1, x2, y2, layer, color) {
     this.addTag(0, 'LINE');
+    layer && this.addTag(8, layer);
+    color && this.addTag(62, color);
     this.addTag(10, x1);
     this.addTag(20, y1);
     this.addTag(30, 0);
     this.addTag(11, x2);
     this.addTag(21, y2);
     this.addTag(31, 0);
-    layer && this.addTag(8, layer);
   }
 
   addBlockReference(name, x, y, layer) {

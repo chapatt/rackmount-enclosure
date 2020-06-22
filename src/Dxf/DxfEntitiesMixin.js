@@ -9,8 +9,8 @@ export default Base => class extends Base {
   }
 
   _insertEntities(dxf) {
-    this.lines.forEach(({ x1, y1, x2, y2 }) => {
-      dxf.addLine(x1, y1, x2, y2);
+    this.lines.forEach(({ x1, y1, x2, y2, layer, color }) => {
+      dxf.addLine(x1, y1, x2, y2, layer, color);
     });
     this.circles.forEach(({ x, y, radius, layer }) => {
       dxf.addCircle(x, y, radius, layer);
@@ -23,8 +23,8 @@ export default Base => class extends Base {
     });
   }
 
-  addLine(x1, y1, x2, y2, layer=null) {
-    this.lines.push({ x1, y1, x2, y2, layer });
+  addLine(x1, y1, x2, y2, layer=null, color=null) {
+    this.lines.push({ x1, y1, x2, y2, layer, color });
   }
 
   // x and y are bottom left corner
