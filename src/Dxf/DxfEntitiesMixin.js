@@ -2,6 +2,8 @@ export default Base => class extends Base {
   constructor() {
     super();
 
+    this.firstHandle = 0;
+    this.nextHandle = 0;
     this.lines = [];
     this.circles = [];
     this.alignedDimensions = [];
@@ -10,16 +12,16 @@ export default Base => class extends Base {
 
   _insertEntities(dxf) {
     this.lines.forEach(({ x1, y1, x2, y2, layer, color }) => {
-      dxf.addLine(x1, y1, x2, y2, layer, color);
+      dxf.addLine(this.nextHandle++, x1, y1, x2, y2, layer, color);
     });
     this.circles.forEach(({ x, y, radius, layer }) => {
-      dxf.addCircle(x, y, radius, layer);
+      dxf.addCircle(this.nextHandle++, x, y, radius, layer);
     });
     this.alignedDimensions.forEach(({ x1, y1, x2, y2, extX, extY, textX, textY }) => {
-      dxf.addAlignedDimension(x1, y1, x2, y2, extX, extY, textX, textY);
+      dxf.addAlignedDimension(this.nextHandle++, x1, y1, x2, y2, extX, extY, textX, textY);
     });
     this.diameterDimensions.forEach(({ x1, y1, x2, y2, textX, textY }) => {
-      dxf.addDiameterDimension(x1, y1, x2, y2, textX, textY);
+      dxf.addDiameterDimension(this.nextHandle++, x1, y1, x2, y2, textX, textY);
     });
   }
 

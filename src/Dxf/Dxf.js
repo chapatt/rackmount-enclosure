@@ -48,8 +48,9 @@ export default class Dxf {
     this.addTag(0, 'ENDBLK');
   }
 
-  addLine(x1, y1, x2, y2, layer, color) {
+  addLine(handle, x1, y1, x2, y2, layer, color) {
     this.addTag(0, 'LINE');
+    this.addTag(5, handle);
     layer && this.addTag(8, layer);
     color && this.addTag(62, color);
     this.addTag(10, x1);
@@ -60,8 +61,9 @@ export default class Dxf {
     this.addTag(31, 0);
   }
 
-  addBlockReference(name, x, y, layer) {
+  addBlockReference(handle, name, x, y, layer) {
     this.addTag(0, 'INSERT');
+    this.addTag(5, handle);
     this.addTag(2, name);
     this.addTag(10, x);
     this.addTag(20, y);
@@ -70,16 +72,18 @@ export default class Dxf {
     layer && this.addTag(8, layer);
   }
 
-  addCircle(x, y, radius, layer) {
+  addCircle(handle, x, y, radius, layer) {
     this.addTag(0, 'CIRCLE');
+    this.addTag(5, handle);
     this.addTag(10, x);
     this.addTag(20, y);
     this.addTag(40, radius);
     layer && this.addTag(8, layer);
   }
 
-  addAlignedDimension(x1, y1, x2, y2, extX, extY, textX, textY, layer) {
+  addAlignedDimension(handle, x1, y1, x2, y2, extX, extY, textX, textY, layer) {
     this.addTag(0, 'DIMENSION');
+    this.addTag(5, handle);
     this.addTag(70, 1);
     this.addTag(13, x1);
     this.addTag(23, y1);
@@ -98,8 +102,9 @@ export default class Dxf {
     layer && this.addTag(8, layer);
   }
 
-  addDiameterDimension(x1, y1, x2, y2, textX, textY, layer) {
+  addDiameterDimension(handle, x1, y1, x2, y2, textX, textY, layer) {
     this.addTag(0, 'DIMENSION');
+    this.addTag(5, handle);
     this.addTag(70, 3);
     this.addTag(15, x1);
     this.addTag(25, y1);

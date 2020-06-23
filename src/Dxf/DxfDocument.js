@@ -30,15 +30,19 @@ export default class DxfDocument extends DxfEntitiesMixin(Object) {
       dxf.addTag(40, 0.0625);
     dxf.endSection(); // HEADER
 
+    this.nextHandle = this.firstHandle;
+
     dxf.beginSection('BLOCKS');
       this.blocks.forEach((block) => {
+        block.firstHandle = this.nextHandle;
         dxf.addRaw(block.toString());
+        this.nextHandle = block.nextHandle;
       });
     dxf.endSection(); // BLOCKS
     dxf.beginSection('ENTITIES');
       this._insertEntities(dxf);
       this.blockReferences.forEach(({ name, x, y, layer }) => {
-        dxf.addBlockReference(name, x, y, layer);
+        dxf.addBlockReference(this.nextHandle++, name, x, y, layer);
       });
     dxf.endSection(); // ENTITIES
     dxf.endFile();

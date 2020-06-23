@@ -12,6 +12,8 @@ export default class DxfBlock extends DxfEntitiesMixin(Object) {
   toString() {
     let dxf = new Dxf();
 
+    this.nextHandle = this.firstHandle;
+
     dxf.beginBlock(this.name, this.layer);
       this._insertEntities(dxf);
     dxf.endBlock(); // BLOCK

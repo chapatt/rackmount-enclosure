@@ -468,11 +468,11 @@
                 endX1 = x2;
                 endX2 = x2;
               }
-              dxf.addLine(x1, y1, startX1, y2);
-              dxf.addLine(startX1, y2, endX1, y2);
-              dxf.addLine(endX1, y2, x2, y1);
-              dxf.addLine(x2, y1, x1, y1);
-              dxf.addLine(startX2, y3, endX2, y3);
+              dxf.addLine(x1, y1, startX1, y2); // start end
+              dxf.addLine(startX1, y2, endX1, y2); // minor length
+              dxf.addLine(endX1, y2, x2, y1); // end end
+              dxf.addLine(x2, y1, x1, y1); // major length
+              dxf.addLine(startX2, y3, endX2, y3); // upright leg indication
               break;
             case 'right':
             case 'left':
@@ -490,11 +490,11 @@
                 endY1 = y2;
                 endY2 = y2;
               }
-              dxf.addLine(x1, y1, x2, startY1);
-              dxf.addLine(x2, startY1, x2, endY1);
-              dxf.addLine(x2, endY1, x1, y2);
-              dxf.addLine(x1, y2, x1, y1);
-              dxf.addLine(x3, startY2, x3, endY2);
+              dxf.addLine(x1, y1, x2, startY1); // start end
+              dxf.addLine(x2, startY1, x2, endY1); // minor length
+              dxf.addLine(x2, endY1, x1, y2); // end end
+              dxf.addLine(x1, y2, x1, y1); // major length
+              dxf.addLine(x3, startY2, x3, endY2); // upright leg indication
               break;
           }
         }
@@ -688,7 +688,7 @@
         dxfDocument.addBlockReference('top_left_side_rail', this.sideThickness - (this.angleHorizontalLeg + this.height + this.angleHorizontalLeg + (3 * this.drawingSpacing)), -(this.frontPanelEdgeToBody + this.bottomDepth + this.angleHorizontalLeg + (2 * this.drawingSpacing)), 'outlines');
 
         // Bottom Rear Rail
-        const bottomRearRailBlock = new DxfBlock('bottom_rear_rail');
+        const bottomRearRailBlock = new DxfBlock('bottom_rear_rail', 'outlines');
         this.addRailToDxf(bottomRearRailBlock, this.angleHorizontalLeg, this.angleVerticalLeg, this.angleThickness, this.rearRailWidth, 'top', 'top', this.rearFullRails, this.rearFullRails);
         if (this.rearFullRails) {
           bottomRearRailBlock.addCircle(this.topSideToOneQuarter, this.angleHorizontalLeg / 2, this.pemDiameter / 2);
@@ -728,6 +728,7 @@
         dxfDocument.addBlock(topRearRailBlock);
         dxfDocument.addBlockReference('top_rear_rail', (this.width - this.rearRailWidth) / 2, -(this.frontPanelEdgeToBody + this.angleHorizontalLeg + this.height + this.angleHorizontalLeg + this.bottomDepth + this.angleHorizontalLeg + (5 * this.drawingSpacing)), 'outlines');
 
+        dxfDocument.firstHandle = 31;
         this.dxfString = dxfDocument.toString();
 
         const helper = new Helper(this.dxfString);
