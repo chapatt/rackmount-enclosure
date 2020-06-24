@@ -604,7 +604,7 @@
 
         // Bottom Right Side Rail
         const bottomRightSideRailBlock = new DxfBlock('bottom_right_side_rail');
-        this.addRailToDxf(bottomRightSideRailBlock, this.angleHorizontalLeg, this.angleVerticalLeg, this.angleThickness, this.sideRailDepth, 'left', 'top', this.rearFullRails, this.frontFullRails);
+        this.addRailToDxf(bottomRightSideRailBlock, this.angleHorizontalLeg, this.angleVerticalLeg, this.angleThickness, this.sideRailDepth, 'left', 'top', this.frontFullRails, this.rearFullRails);
         bottomRightSideRailBlock.addCircle(this.angleHorizontalLeg / 2, this.topFrontToOneQuarter, this.pemDiameter / 2);
         bottomRightSideRailBlock.addCircle(this.angleHorizontalLeg / 2, this.topDepth - this.topFrontToOneQuarter, this.pemDiameter / 2);
         dxfDocument.addBlock(bottomRightSideRailBlock);
@@ -642,7 +642,7 @@
 
         // Top Right Side Rail
         const topRightSideRailBlock = new DxfBlock('top_right_side_rail');
-        this.addRailToDxf(topRightSideRailBlock, this.angleVerticalLeg, this.angleHorizontalLeg, this.angleThickness, this.sideRailDepth, 'left', 'side', this.frontFullRails, this.rearFullRails);
+        this.addRailToDxf(topRightSideRailBlock, this.angleVerticalLeg, this.angleHorizontalLeg, this.angleThickness, this.sideRailDepth, 'left', 'side', this.rearFullRails, this.frontFullRails);
         topRightSideRailBlock.addCircle(this.angleVerticalLeg / 2, this.sideRailEndToFrontCornerHole, this.screwFreeFitDiameter / 2);
         topRightSideRailBlock.addCircle(this.angleVerticalLeg / 2, this.sideRailDepth - this.sideRailEndToRearCornerHole, this.screwFreeFitDiameter / 2);
         topRightSideRailBlock.addCircle(this.angleHorizontalLeg / 2, this.topFrontToOneQuarter, this.pemDiameter / 2);
@@ -652,7 +652,7 @@
 
         // Bottom Left Side Rail
         const bottomLeftSideRailBlock = new DxfBlock('bottom_left_side_rail');
-        this.addRailToDxf(bottomLeftSideRailBlock, this.angleHorizontalLeg, this.angleVerticalLeg, this.angleThickness, this.sideRailDepth, 'right', 'top', this.frontFullRails, this.rearFullRails);
+        this.addRailToDxf(bottomLeftSideRailBlock, this.angleHorizontalLeg, this.angleVerticalLeg, this.angleThickness, this.sideRailDepth, 'right', 'top', this.rearFullRails, this.frontFullRails);
         bottomLeftSideRailBlock.addCircle(this.angleHorizontalLeg / 2, this.topFrontToOneQuarter, this.pemDiameter / 2);
         bottomLeftSideRailBlock.addCircle(this.angleHorizontalLeg / 2, this.topDepth - this.topFrontToOneQuarter, this.pemDiameter / 2);
         dxfDocument.addBlock(bottomLeftSideRailBlock);
@@ -690,7 +690,7 @@
 
         // Top Left Side Rail
         const topLeftSideRailBlock = new DxfBlock('top_left_side_rail');
-        this.addRailToDxf(topLeftSideRailBlock, this.angleVerticalLeg, this.angleHorizontalLeg, this.angleThickness, this.sideRailDepth, 'right', 'side', this.rearFullRails, this.frontFullRails);
+        this.addRailToDxf(topLeftSideRailBlock, this.angleVerticalLeg, this.angleHorizontalLeg, this.angleThickness, this.sideRailDepth, 'right', 'side', this.frontFullRails, this.rearFullRails);
         topLeftSideRailBlock.addCircle(this.angleVerticalLeg / 2, this.sideRailEndToFrontCornerHole, this.screwFreeFitDiameter / 2);
         topLeftSideRailBlock.addCircle(this.angleVerticalLeg / 2, this.sideRailDepth - this.sideRailEndToRearCornerHole, this.screwFreeFitDiameter / 2);
         topLeftSideRailBlock.addCircle(this.angleHorizontalLeg / 2, this.topFrontToOneQuarter, this.pemDiameter / 2);
