@@ -6,6 +6,7 @@ export default Base => class extends Base {
     this.nextHandle = 0;
     this.lines = [];
     this.circles = [];
+    this.arcs = [];
     this.alignedDimensions = [];
     this.diameterDimensions = [];
   }
@@ -16,6 +17,9 @@ export default Base => class extends Base {
     });
     this.circles.forEach(({ x, y, radius, layer }) => {
       dxf.addCircle(this.nextHandle++, x, y, radius, layer);
+    });
+    this.arcs.forEach(({ x, y, radius, startAngle, endAngle, layer }) => {
+      dxf.addArc(this.nextHandle++, x, y, radius, startAngle, endAngle, layer);
     });
     this.alignedDimensions.forEach(({ x1, y1, x2, y2, extX, extY, textX, textY }) => {
       dxf.addAlignedDimension(this.nextHandle++, x1, y1, x2, y2, extX, extY, textX, textY);
@@ -30,15 +34,30 @@ export default Base => class extends Base {
   }
 
   // x and y are bottom left corner
-  addRectangle(w, h, x=0, y=0, layer) {
+  addRectangle(w, h, x=0, y=0, layer=null) {
     this.addLine(x, y, x, y + h, layer);
     this.addLine(x, y + h, x + w, y + h, layer);
     this.addLine(x + w, y + h, x + w, y, layer);
     this.addLine(x + w, y, x, y, layer);
   }
 
+  addRoundedRectangle(w, h, radius, x=0, y=0, layer=null) {
+    this.addLine(x, y + radius, x, (y + h) - radius, layer);
+    this.addArc(x + radius, (y + h) - radius, radius, 90, 180, layer);
+    this.addLine(x + radius, y + h, (x + w) - radius, y + h, layer);
+    this.addArc((x + w) - radius, (y + h) - radius, radius, 0, 90, layer);
+    this.addLine(x + w, (y + h) - radius, x + w, y + radius, layer);
+    this.addArc(x + radius, y + radius, radius,180, 270, layer);
+    this.addLine((x + w) - radius, y, x + radius, y, layer);
+    this.addArc((x + w) - radius, y + radius, radius,270, 360, layer);
+  }
+
   addCircle(x, y, radius, layer) {
     this.circles.push({ x, y, radius, layer });
+  }
+
+  addArc(x, y, radius, startAngle, endAngle, layer) {
+    this.arcs.push({ x, y, radius, startAngle, endAngle, layer });
   }
 
   // textX and textY are optional
@@ -76,15 +95,11 @@ export default Base => class extends Base {
     this.diameterDimensions.push({ x1, y1, x2, y2, textX, textY, layer });
   }
 
-  addSimpleDiameterDimension(x, y, diameter, angleDeg, layer) {
+  addSimpleDiameterDimension(x, y, diameter, angle, layer) {
     let x1, y1, x2, y2;
 
-    //x1 = x - (diameter / 2);
-    //x2 = x + (diameter / 2);
-    //y1 = y2 = y;
-
     const radius = diameter / 2;
-    const angleRad = angleDeg * (Math.PI / 180);
+    const angleRad = angle * (Math.PI / 180);
     const angleOppositeRad = angleRad + Math.PI;
 
     x1 = x + (radius * Math.cos(angleOppositeRad));

@@ -65,20 +65,32 @@ export default class Dxf {
     this.addTag(0, 'INSERT');
     this.addTag(5, handle);
     this.addTag(2, name);
+    layer && this.addTag(8, layer);
     this.addTag(10, x);
     this.addTag(20, y);
     this.addTag(30, 0);
-    this.addTag(8, layer);
-    layer && this.addTag(8, layer);
   }
 
   addCircle(handle, x, y, radius, layer) {
     this.addTag(0, 'CIRCLE');
     this.addTag(5, handle);
+    layer && this.addTag(8, layer);
     this.addTag(10, x);
     this.addTag(20, y);
+    this.addTag(30, 0);
     this.addTag(40, radius);
+  }
+
+  addArc(handle, x, y, radius, startAngle, endAngle, layer) {
+    this.addTag(0, 'ARC');
+    this.addTag(5, handle);
     layer && this.addTag(8, layer);
+    this.addTag(10, x);
+    this.addTag(20, y);
+    this.addTag(30, 0);
+    this.addTag(40, radius);
+    this.addTag(50, startAngle);
+    this.addTag(51, endAngle);
   }
 
   addAlignedDimension(handle, x1, y1, x2, y2, extX, extY, textX, textY, layer) {

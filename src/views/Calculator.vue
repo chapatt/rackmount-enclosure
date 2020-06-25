@@ -9,6 +9,15 @@
 
       <label for="frontPanelHeight">Front panel height: </label>
       <input id="frontPanelHeight" v-model.number="frontPanelHeight" type="number" />
+      <br />
+
+      <label for="frontPanelRadiusedCorners">Radius corners of front panel: </label>
+      <input id="frontPanelRadiusedCorners" v-model="frontPanelRadiusedCorners" type="checkbox" />
+      <br />
+
+      <label for="frontPanelCornerRadius">Front panel corner radius: </label>
+      <input id="frontPanelCornerRadius" v-model.number="frontPanelCornerRadius" type="number" :disabled="!frontPanelRadiusedCorners" />
+      <br />
     </fieldset>
 
     <fieldset>
@@ -139,6 +148,8 @@
   const defaultParams = {
     frontPanelWidth: 19,
     frontPanelHeight: (1 + (3 / 4)) - (1 / 32),
+    frontPanelRadiusedCorners: true,
+    frontPanelCornerRadius: 0.0625,
     frontFullRails: true,
     frontPartialRailWidth: 2,
     rearFullRails: true,
@@ -543,7 +554,11 @@
 
         // Front Panel
         const frontPanelBlock = new DxfBlock('front_panel');
-        frontPanelBlock.addRectangle(this.frontPanelWidth, this.frontPanelHeight);
+        if (this.frontPanelRadiusedCorners) {
+          frontPanelBlock.addRoundedRectangle(this.frontPanelWidth, this.frontPanelHeight, this.frontPanelCornerRadius);
+        } else {
+          frontPanelBlock.addRectangle(this.frontPanelWidth, this.frontPanelHeight);
+        }
         frontPanelBlock.addSimpleAlignedDimension(0, 0, 0, this.frontPanelHeight, 'left');
         frontPanelBlock.addSimpleAlignedDimension(0, this.frontPanelHeight, this.frontPanelWidth, this.frontPanelHeight, 'up');
         frontPanelBlock.addCircle(this.frontPanelEndToCornerHole, this.frontPanelBottomEdgeToCornerHole, this.frontPanelCornerHoleDiameter / 2);
