@@ -18,6 +18,66 @@
       <label for="frontPanelCornerRadius">Front panel corner radius: </label>
       <input id="frontPanelCornerRadius" v-model.number="frontPanelCornerRadius" type="number" :disabled="!frontPanelRadiusedCorners" />
       <br />
+
+      <label for="rackHoles">Rack holes: </label>
+      <input id="rackHoles" v-model="rackHoles" type="checkbox" />
+      <br />
+
+      <fieldset :disabled="!rackHoles">
+        <legend>Rack Holes</legend>
+
+        <label for="rackHoleDiameter">Rack hole diameter: </label>
+        <input id="rackHoleDiameter" v-model.number="rackHoleDiameter" type="number" />
+        <br />
+
+        <label for="roundRackHoles">Rack holes are round: </label>
+        <input id="roundRackHoles" v-model="roundRackHoles" type="checkbox" />
+        <br />
+
+        <label for="rackHoleEccentricity">Rack hole eccentricity: </label>
+        <input id="rackHoleEccentricity" v-model.number="rackHoleEccentricity" type="number" :disabled="roundRackHoles" />
+        <br />
+
+        <label for="rackNotches" class="not-implemented">Rack holes are open notches (not implemented): </label>
+        <input id="rackNotches" v-model="rackNotches" type="checkbox" :disabled="true || roundRackHoles" />
+        <br />
+
+        <label for="rackNotchRadiusCorners" class="not-implemented">Radius corners of rack notches (not implemented): </label>
+        <input id="rackNotchRadiusCorners" v-model="rackNotchRadiusCorners" type="checkbox" :disabled="true || !rackNotches || roundRackHoles" />
+        <br />
+
+        <label for="rackNotchCornerRadius" class="not-implemented">Rack notch corner radius (not implemented): </label>
+        <input id="rackNotchCornerRadius" v-model.number="rackNotchCornerRadius" type="number" :disabled="true || !rackNotches || !rackNotchRadiusCorners || roundRackHoles" />
+        <br />
+
+        <hr />
+
+        <label for="rackHolePreset">Preset: </label>
+        <select id="rackHolePreset" @change="setRackHolePreset($event)">
+          <option value="none" selected disabled hidden>&nbsp;</option>
+          <option v-for="(preset, index) in rackHolePresets" :key="index" :value="index">{{preset.name}}</option>
+        </select>
+        <br />
+
+        <label for="rackHoleHorizontalSpacing">Rack hole horizontal spacing (center-to-center): </label>
+        <input id="rackHoleHorizontalSpacing" v-model.number="rackHoleDimensions.horizontalSpacing" type="number" />
+        <br />
+
+        <div v-for="(row, index) in rackHoleDimensions.data" :key="index">
+          <div>&bull; Rack hole row #{{index + 1}}</div>
+
+          <div class="space" v-if="index < rackHoleDimensions.data.length - 1">
+            <div class="space-symbol">
+              <div style="border-width: 2px 1px 2px 0;"></div>
+              <div style="border-width: 2px 0 2px 1px;"></div>
+            </div>
+            <input v-if="index < rackHoleDimensions.data.length - 1" v-model.number="rackHoleDimensions.data[index].spaceBelow" type="number" />
+          </div>
+        </div>
+
+        <button v-on:click="addRackHoleRow()">Add Row</button>
+        <button v-on:click="removeRackHoleRow()">Remove Row</button>
+      </fieldset>
     </fieldset>
 
     <fieldset>
@@ -150,6 +210,13 @@
     frontPanelHeight: (1 + (3 / 4)) - (1 / 32),
     frontPanelRadiusedCorners: true,
     frontPanelCornerRadius: 0.0625,
+    rackHoles: true,
+    rackHoleDiameter: 0.25,
+    roundRackHoles: false,
+    rackHoleEccentricity: 0.125,
+    rackNotches: false,
+    rackNotchRadiusCorners: true,
+    rackNotchCornerRadius: 0.0625,
     frontFullRails: true,
     frontPartialRailWidth: 2,
     rearFullRails: true,
@@ -172,7 +239,43 @@
     hasHandles: false,
     handleHoleDiameter: 1 / 16,
     handleHoleSpacing: 1 + (1 / 4),
-  }
+  };
+
+  const rackHolePresets = [
+    {
+      name: '19-inch, 1U',
+      horizontalSpacing: 18.312,
+      data: [
+        { spaceBelow: 1.25 },
+        { spaceBelow: 0 },
+      ],
+    },
+    {
+      name: '19-inch, 2U',
+      horizontalSpacing: 18.312,
+      data: [
+        { spaceBelow: 3 },
+        { spaceBelow: 0 },
+      ],
+    },
+    {
+      name: '19-inch, 2U, 8 holes',
+      horizontalSpacing: 18.312,
+      data: [
+        { spaceBelow: 1.25 },
+        { spaceBelow: 0.5 },
+        { spaceBelow: 1.25 },
+        { spaceBelow: 0 },
+      ],
+    },
+    {
+      name: '500 Series, 1U',
+      horizontalSpacing: 4.938,
+      data: [
+        { spaceBelow: 0 },
+      ],
+    },
+  ];
 
   export default {
     name: 'App',
@@ -182,6 +285,9 @@
         dxfString: null,
         svgString: null,
         drawingSpacing: 1,
+        rackHoleDimensions: {
+          horizontalSpacing: 18.312,
+        },
         ...defaultParams,
       };
     },
@@ -311,10 +417,38 @@
       },
     },
     methods: {
+      setRackHolePreset: function (event) {
+        const index = event.target.value;
+        this.rackHoleDimensions = {
+          ...rackHolePresets[index],
+          data: [ ...rackHolePresets[index].data ],
+        };
+      },
+      addRackHoleRow: function () {
+        this.rackHoleDimensions.data.push({
+          spaceBelow: 0,
+        })
+      },
+      removeRackHoleRow: function () {
+        this.rackHoleDimensions.data.pop();
+      },
       generateUrl: function () {
         const inputParams = Object.keys(defaultParams).reduce((obj, key) => ({ ...obj, [key]: this[key] }), {});
         const queryString = new URLSearchParams(inputParams);
         this.url = location.protocol + '//' + location.host + location.pathname + '?' + queryString;
+      },
+      // dxf should implement DxfEntitiesMixin
+      addRackHolesToDxf(dxf, centerX, centerY) {
+        const spaceSum = this.rackHoleDimensions.data.reduce((spaceSum, { spaceBelow }) => {
+          return spaceSum + (spaceBelow ? spaceBelow : 0);
+        }, 0);
+        console.log(spaceSum);
+        let y = centerY - (spaceSum / 2);
+        this.rackHoleDimensions.data.reduceRight((_, { spaceBelow }) => {
+          y += spaceBelow ? spaceBelow : 0;
+          dxf.addCircle(centerX - (this.rackHoleDimensions.horizontalSpacing / 2), y, this.rackHoleDiameter / 2);
+          dxf.addCircle(centerX + (this.rackHoleDimensions.horizontalSpacing / 2), y, this.rackHoleDiameter / 2);
+        }, null);
       },
       // dxf should implement DxfEntitiesMixin
       // perspective should be 'top' or 'side'
@@ -559,6 +693,7 @@
         } else {
           frontPanelBlock.addRectangle(this.frontPanelWidth, this.frontPanelHeight);
         }
+        this.addRackHolesToDxf(frontPanelBlock, this.frontPanelWidth / 2, this.frontPanelHeight / 2);
         frontPanelBlock.addSimpleAlignedDimension(0, 0, 0, this.frontPanelHeight, 'left');
         frontPanelBlock.addSimpleAlignedDimension(0, this.frontPanelHeight, this.frontPanelWidth, this.frontPanelHeight, 'up');
         frontPanelBlock.addCircle(this.frontPanelEndToCornerHole, this.frontPanelBottomEdgeToCornerHole, this.frontPanelCornerHoleDiameter / 2);
@@ -797,20 +932,27 @@
     },
     created: function () {
       this.initDefaultParams();
+
+      // Expose this const for use in the template
+      this.rackHolePresets = rackHolePresets;
     },
   }
 </script>
 
 <style>
-  input, fieldset {
-    margin-left: 0;
-    margin-right: 0;
-    margin-bottom: 0.5em;
+  html {
+    font-family: sans-serif;
+  }
+  input, fieldset, label, button, select {
+    margin: 0.5em 0;
   }
   fieldset, .dxf-view {
     border-width: 2px;
     border-color: darkgray;
     border-style: solid;
+  }
+  label.not-implemented {
+    color: #888;
   }
   input, button {
     margin-right: 1em;
@@ -821,5 +963,25 @@
   .dxf-view {
     height: 30em;
     padding: 1em;
+  }
+  .space {
+    display: flex;
+    flex-direction: row;
+  }
+  .space input {
+    align-self: center;
+  }
+  .space-symbol {
+    align-self: stretch;
+    margin-right: 0.5em;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    border-collapse: collapse;
+  }
+  .space-symbol div {
+    width: 0.2em;
+    border-style: solid;
+    border-color: #aaa;
   }
 </style>
