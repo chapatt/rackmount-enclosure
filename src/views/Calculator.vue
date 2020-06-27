@@ -76,7 +76,7 @@
         </div>
 
         <button v-on:click="addRackHoleRow()">Add Row</button>
-        <button v-on:click="removeRackHoleRow()">Remove Row</button>
+        <button v-on:click="removeRackHoleRow()" :disabled="rackHoleDimensions.data.length === 0">Remove Row</button>
       </fieldset>
     </fieldset>
 
@@ -191,9 +191,9 @@
 
     <button v-on:click="generateDrawing()">Generate Drawing</button>
 
-    <button v-if="this.dxfString" v-on:click="downloadDxf()">Download DXF</button>
+    <button v-on:click="downloadDxf()" :disabled="!dxfString">Download DXF</button>
 
-    <button v-if="this.svgString" v-on:click="downloadSvg()">Download SVG</button>
+    <button v-on:click="downloadSvg()" :disabled="!svgString">Download SVG</button>
 
     <div v-html="svgString" class="dxf-view" />
   </div>
