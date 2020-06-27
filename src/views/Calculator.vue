@@ -287,6 +287,7 @@
         drawingSpacing: 1,
         rackHoleDimensions: {
           horizontalSpacing: 18.312,
+          data: [],
         },
         ...defaultParams,
       };
@@ -448,6 +449,10 @@
       },
       // dxf should implement DxfEntitiesMixin
       addRackHolesToDxf(dxf, centerX, centerY) {
+        if (this.rackHoleDimensions.data.length === 0) {
+          return;
+        }
+
         const spaceSum = this.rackHoleDimensions.data.reduce((spaceSum, { spaceBelow }) => {
           return spaceSum + (spaceBelow ? spaceBelow : 0);
         }, 0);
