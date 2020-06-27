@@ -30,24 +30,24 @@
         <input id="rackHoleDiameter" v-model.number="rackHoleDiameter" type="number" />
         <br />
 
-        <label for="roundRackHoles">Rack holes are round: </label>
-        <input id="roundRackHoles" v-model="roundRackHoles" type="checkbox" />
+        <label for="circularRackHoles">Rack holes are circular: </label>
+        <input id="circularRackHoles" v-model="circularRackHoles" type="checkbox" />
         <br />
 
         <label for="rackHoleEccentricity">Rack hole eccentricity: </label>
-        <input id="rackHoleEccentricity" v-model.number="rackHoleEccentricity" type="number" :disabled="roundRackHoles" />
+        <input id="rackHoleEccentricity" v-model.number="rackHoleEccentricity" type="number" :disabled="circularRackHoles" />
         <br />
 
         <label for="rackNotches" class="not-implemented">Rack holes are open notches (not implemented): </label>
-        <input id="rackNotches" v-model="rackNotches" type="checkbox" :disabled="true || roundRackHoles" />
+        <input id="rackNotches" v-model="rackNotches" type="checkbox" :disabled="true || circularRackHoles" />
         <br />
 
         <label for="rackNotchRadiusCorners" class="not-implemented">Radius corners of rack notches (not implemented): </label>
-        <input id="rackNotchRadiusCorners" v-model="rackNotchRadiusCorners" type="checkbox" :disabled="true || !rackNotches || roundRackHoles" />
+        <input id="rackNotchRadiusCorners" v-model="rackNotchRadiusCorners" type="checkbox" :disabled="true || !rackNotches || circularRackHoles" />
         <br />
 
         <label for="rackNotchCornerRadius" class="not-implemented">Rack notch corner radius (not implemented): </label>
-        <input id="rackNotchCornerRadius" v-model.number="rackNotchCornerRadius" type="number" :disabled="true || !rackNotches || !rackNotchRadiusCorners || roundRackHoles" />
+        <input id="rackNotchCornerRadius" v-model.number="rackNotchCornerRadius" type="number" :disabled="true || !rackNotches || !rackNotchRadiusCorners || circularRackHoles" />
         <br />
 
         <hr />
@@ -212,7 +212,7 @@
     frontPanelCornerRadius: 0.0625,
     rackHoles: true,
     rackHoleDiameter: 0.25,
-    roundRackHoles: false,
+    circularRackHoles: false,
     rackHoleEccentricity: 0.125,
     rackNotches: false,
     rackNotchRadiusCorners: true,
@@ -438,16 +438,29 @@
         this.url = location.protocol + '//' + location.host + location.pathname + '?' + queryString;
       },
       // dxf should implement DxfEntitiesMixin
+      addHorizontalOvalToDxf(dxf, x, y, radius, eccentricity) {
+        const leftCenter = x - (eccentricity / 2);
+        const rightCenter = x + (eccentricity / 2);
+        dxf.addArc(leftCenter, y, radius, 90, 270);
+        dxf.addArc(rightCenter, y, radius, 270, 90);
+        dxf.addLine(leftCenter, y + radius, rightCenter, y + radius)
+        dxf.addLine(leftCenter, y - radius, rightCenter, y - radius)
+      },
+      // dxf should implement DxfEntitiesMixin
       addRackHolesToDxf(dxf, centerX, centerY) {
         const spaceSum = this.rackHoleDimensions.data.reduce((spaceSum, { spaceBelow }) => {
           return spaceSum + (spaceBelow ? spaceBelow : 0);
         }, 0);
-        console.log(spaceSum);
         let y = centerY - (spaceSum / 2);
         this.rackHoleDimensions.data.reduceRight((_, { spaceBelow }) => {
           y += spaceBelow ? spaceBelow : 0;
-          dxf.addCircle(centerX - (this.rackHoleDimensions.horizontalSpacing / 2), y, this.rackHoleDiameter / 2);
-          dxf.addCircle(centerX + (this.rackHoleDimensions.horizontalSpacing / 2), y, this.rackHoleDiameter / 2);
+          if (this.circularRackHoles) {
+            dxf.addCircle(centerX - (this.rackHoleDimensions.horizontalSpacing / 2), y, this.rackHoleDiameter / 2);
+            dxf.addCircle(centerX + (this.rackHoleDimensions.horizontalSpacing / 2), y, this.rackHoleDiameter / 2);
+          } else {
+            this.addHorizontalOvalToDxf(dxf, centerX - (this.rackHoleDimensions.horizontalSpacing / 2), y, this.rackHoleDiameter / 2, this.rackHoleEccentricity);
+            this.addHorizontalOvalToDxf(dxf, centerX + (this.rackHoleDimensions.horizontalSpacing / 2), y, this.rackHoleDiameter / 2, this.rackHoleEccentricity);
+          }
         }, null);
       },
       // dxf should implement DxfEntitiesMixin
