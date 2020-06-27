@@ -433,11 +433,6 @@
       removeRackHoleRow: function () {
         this.rackHoleDimensions.data.pop();
       },
-      generateUrl: function () {
-        const inputParams = Object.keys(defaultParams).reduce((obj, key) => ({ ...obj, [key]: this[key] }), {});
-        const queryString = new URLSearchParams(inputParams);
-        this.url = location.protocol + '//' + location.host + location.pathname + '?' + queryString;
-      },
       // dxf should implement DxfEntitiesMixin
       addHorizontalOvalToDxf(dxf, x, y, radius, eccentricity) {
         const leftCenter = x - (eccentricity / 2);
@@ -711,7 +706,7 @@
         } else {
           frontPanelBlock.addRectangle(this.frontPanelWidth, this.frontPanelHeight);
         }
-        this.addRackHolesToDxf(frontPanelBlock, this.frontPanelWidth / 2, this.frontPanelHeight / 2);
+        this.rackHoles && this.addRackHolesToDxf(frontPanelBlock, this.frontPanelWidth / 2, this.frontPanelHeight / 2);
         frontPanelBlock.addSimpleAlignedDimension(0, 0, 0, this.frontPanelHeight, 'left');
         frontPanelBlock.addSimpleAlignedDimension(0, this.frontPanelHeight, this.frontPanelWidth, this.frontPanelHeight, 'up');
         frontPanelBlock.addCircle(this.frontPanelEndToCornerHole, this.frontPanelBottomEdgeToCornerHole, this.frontPanelCornerHoleDiameter / 2);
@@ -933,6 +928,15 @@
         link.click();
         document.body.removeChild(link);
       },
+      generateUrl: function () {
+        const inputParams = Object.keys(defaultParams).reduce((obj, key) => ({ ...obj, [key]: this[key] }), {});
+        const queryString = new URLSearchParams(inputParams);
+        queryString.append('rackHoleHorizontalSpacing', this.rackHoleDimensions.horizontalSpacing);
+        const rackHoleDataQueryParam = this.rackHoleDimensions.data.map(({ spaceBelow }) => spaceBelow).join(',');
+        this.url = location.protocol + '//' + location.host + location.pathname
+          + `?${queryString}`
+          + ((this.rackHoleDimensions.data.length > 0) ? `&rackHoleData=${rackHoleDataQueryParam}` : '');
+      },
       initDefaultParams: function () {
         Object.keys(defaultParams).forEach(key => {
           const queryValue = this.$route.query[key];
@@ -946,6 +950,20 @@
 
           this[key] = defaultParams[key];
         });
+
+        const rackHoleHorizontalSpacing = this.$route.query.rackHoleHorizontalSpacing;
+        if (rackHoleHorizontalSpacing) {
+          this.rackHoleDimensions.horizontalSpacing = rackHoleHorizontalSpacing;
+        }
+
+        const rackHoleData = this.$route.query.rackHoleData;
+        if (rackHoleData) {
+          const valuesAsNumbers = rackHoleData.split(',').map(spaceBelow => ({ spaceBelow: Number.parseFloat(spaceBelow) }));
+          const includesNaN = valuesAsNumbers.some(value => Number.isNaN(value));
+          if (!includesNaN) {
+            this.rackHoleDimensions.data = valuesAsNumbers;
+          }
+        }
       },
     },
     created: function () {
