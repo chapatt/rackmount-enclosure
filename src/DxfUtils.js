@@ -21,12 +21,12 @@ export default class DxfUtils {
     let y = centerY - (spaceSum / 2);
     rackHoleDimensions.data.reduceRight((_, { spaceBelow }) => {
       y += spaceBelow ? spaceBelow : 0;
-      if (this.circularRackHoles) {
-        dxf.addCircle(centerX - (rackHoleDimensions.horizontalSpacing / 2), y, this.rackHoleDiameter / 2);
-        dxf.addCircle(centerX + (rackHoleDimensions.horizontalSpacing / 2), y, this.rackHoleDiameter / 2);
+      if (rackHoleDimensions.circular) {
+        dxf.addCircle(centerX - (rackHoleDimensions.horizontalSpacing / 2), y, rackHoleDimensions.diameter / 2);
+        dxf.addCircle(centerX + (rackHoleDimensions.horizontalSpacing / 2), y, rackHoleDimensions.diameter / 2);
       } else {
-        DxfUtils.addHorizontalOvalToDxf(dxf, centerX - (rackHoleDimensions.horizontalSpacing / 2), y, this.rackHoleDiameter / 2, this.rackHoleEccentricity);
-        DxfUtils.addHorizontalOvalToDxf(dxf, centerX + (rackHoleDimensions.horizontalSpacing / 2), y, this.rackHoleDiameter / 2, this.rackHoleEccentricity);
+        DxfUtils.addHorizontalOvalToDxf(dxf, centerX - (rackHoleDimensions.horizontalSpacing / 2), y, rackHoleDimensions.diameter / 2, rackHoleDimensions.eccentricity);
+        DxfUtils.addHorizontalOvalToDxf(dxf, centerX + (rackHoleDimensions.horizontalSpacing / 2), y, rackHoleDimensions.diameter / 2, rackHoleDimensions.eccentricity);
       }
     }, null);
   }

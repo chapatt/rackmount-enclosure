@@ -26,37 +26,35 @@
       <fieldset :disabled="!rackHoles">
         <legend>Rack Holes</legend>
 
-        <label for="rackHoleDiameter">Rack hole diameter: </label>
-        <input id="rackHoleDiameter" v-model.number="rackHoleDiameter" type="number" />
-        <br />
-
-        <label for="circularRackHoles">Rack holes are circular: </label>
-        <input id="circularRackHoles" v-model="circularRackHoles" type="checkbox" />
-        <br />
-
-        <label for="rackHoleEccentricity">Rack hole eccentricity: </label>
-        <input id="rackHoleEccentricity" v-model.number="rackHoleEccentricity" type="number" :disabled="circularRackHoles" />
-        <br />
-
-        <label for="rackNotches" class="not-implemented">Rack holes are open notches (not implemented): </label>
-        <input id="rackNotches" v-model="rackNotches" type="checkbox" :disabled="circularRackHoles" />
-        <br />
-
-        <label for="rackNotchRadiusCorners" class="not-implemented">Radius corners of rack notches (not implemented): </label>
-        <input id="rackNotchRadiusCorners" v-model="rackNotchRadiusCorners" type="checkbox" :disabled="!rackNotches || circularRackHoles" />
-        <br />
-
-        <label for="rackNotchCornerRadius" class="not-implemented">Rack notch corner radius (not implemented): </label>
-        <input id="rackNotchCornerRadius" v-model.number="rackNotchCornerRadius" type="number" :disabled="!rackNotches || !rackNotchRadiusCorners || circularRackHoles" />
-        <br />
-
-        <hr />
-
         <label for="rackHolePreset">Preset: </label>
         <select id="rackHolePreset" @change="setRackHolePreset($event)">
           <option value="none" selected disabled hidden>&nbsp;</option>
           <option v-for="(preset, index) in rackHolePresets" :key="index" :value="index">{{preset.name}}</option>
         </select>
+        <br />
+
+        <label for="rackHoleDiameter">Rack hole diameter: </label>
+        <input id="rackHoleDiameter" v-model.number="rackHoleDimensions.diameter" type="number" />
+        <br />
+
+        <label for="circularRackHoles">Rack holes are circular: </label>
+        <input id="circularRackHoles" v-model="rackHoleDimensions.circular" type="checkbox" />
+        <br />
+
+        <label for="rackHoleEccentricity">Rack hole eccentricity: </label>
+        <input id="rackHoleEccentricity" v-model.number="rackHoleDimensions.eccentricity" type="number" :disabled="rackHoleDimensions.circular" />
+        <br />
+
+        <label for="rackNotches" class="not-implemented">Rack holes are open notches (not implemented): </label>
+        <input id="rackNotches" v-model="rackHoleDimensions.notches" type="checkbox" :disabled="rackHoleDimensions.circular" />
+        <br />
+
+        <label for="rackNotchRadiusCorners" class="not-implemented">Radius corners of rack notches (not implemented): </label>
+        <input id="rackNotchRadiusCorners" v-model="rackHoleDimensions.notchRadiusCorners" type="checkbox" :disabled="!rackHoleDimensions.notches || rackHoleDimensions.circular" />
+        <br />
+
+        <label for="rackNotchCornerRadius" class="not-implemented">Rack notch corner radius (not implemented): </label>
+        <input id="rackNotchCornerRadius" v-model.number="rackHoleDimensions.notchCornerRadius" type="number" :disabled="!rackHoleDimensions.notches || !rackHoleDimensions.notchRadiusCorners || rackHoleDimensions.circular" />
         <br />
 
         <label for="rackHoleHorizontalSpacing">Rack hole horizontal spacing (center-to-center): </label>
@@ -213,12 +211,6 @@
     frontPanelRadiusedCorners: true,
     frontPanelCornerRadius: 0.0625,
     rackHoles: true,
-    rackHoleDiameter: 0.25,
-    circularRackHoles: false,
-    rackHoleEccentricity: 0.125,
-    rackNotches: false,
-    rackNotchRadiusCorners: true,
-    rackNotchCornerRadius: 0.0625,
     frontFullRails: true,
     frontPartialRailWidth: 2,
     rearFullRails: true,
@@ -243,9 +235,25 @@
     handleHoleSpacing: 1 + (1 / 4),
   };
 
+  const rackHoleProperties = [
+    'diameter',
+    'circular',
+    'eccentricity',
+    'notches',
+    'notchRadiusCorners',
+    'notchCornerRadius',
+    'horizontalSpacing',
+  ];
+
   const rackHolePresets = [
     {
       name: '19-inch, 1U',
+      diameter: 0.25,
+      circular: false,
+      eccentricity: 0.125,
+      notches: false,
+      notchRadiusCorners: true,
+      notchCornerRadius: 0.0625,
       horizontalSpacing: 18.312,
       data: [
         { spaceBelow: 1.25 },
@@ -254,6 +262,12 @@
     },
     {
       name: '19-inch, 2U',
+      diameter: 0.25,
+      circular: false,
+      eccentricity: 0.125,
+      notches: false,
+      notchRadiusCorners: true,
+      notchCornerRadius: 0.0625,
       horizontalSpacing: 18.312,
       data: [
         { spaceBelow: 3 },
@@ -262,6 +276,12 @@
     },
     {
       name: '19-inch, 2U, 8 holes',
+      diameter: 0.25,
+      circular: false,
+      eccentricity: 0.125,
+      notches: false,
+      notchRadiusCorners: true,
+      notchCornerRadius: 0.0625,
       horizontalSpacing: 18.312,
       data: [
         { spaceBelow: 1.25 },
@@ -272,6 +292,12 @@
     },
     {
       name: '500 Series, 1U',
+      diameter: 0.25,
+      circular: false,
+      eccentricity: 0.125,
+      notches: false,
+      notchRadiusCorners: true,
+      notchCornerRadius: 0.0625,
       horizontalSpacing: 4.938,
       data: [
         { spaceBelow: 0 },
@@ -288,6 +314,12 @@
         svgString: null,
         drawingSpacing: 1,
         rackHoleDimensions: {
+          diameter: 0.25,
+          circular: false,
+          eccentricity: 0.125,
+          notches: false,
+          notchRadiusCorners: true,
+          notchCornerRadius: 0.0625,
           horizontalSpacing: 18.312,
           data: [],
         },
@@ -709,8 +741,14 @@
       generateUrl() {
         const inputParams = Object.keys(defaultParams).reduce((obj, key) => ({ ...obj, [key]: this[key] }), {});
         const queryString = new URLSearchParams(inputParams);
-        queryString.append('rackHoleHorizontalSpacing', this.rackHoleDimensions.horizontalSpacing);
+
+        rackHoleProperties.forEach(prop => {
+          const capProp = prop.charAt(0).toUpperCase() + prop.slice(1);
+          queryString.append(`rackHole${capProp}`, this.rackHoleDimensions[prop]);
+        });
+
         const rackHoleDataQueryParam = this.rackHoleDimensions.data.map(({ spaceBelow }) => spaceBelow).join(',');
+
         this.url = location.protocol + '//' + location.host + location.pathname
           + `?${queryString}`
           + ((this.rackHoleDimensions.data.length > 0) ? `&rackHoleData=${rackHoleDataQueryParam}` : '');
@@ -729,10 +767,13 @@
           this[key] = defaultParams[key];
         });
 
-        const rackHoleHorizontalSpacing = this.$route.query.rackHoleHorizontalSpacing;
-        if (rackHoleHorizontalSpacing) {
-          this.rackHoleDimensions.horizontalSpacing = rackHoleHorizontalSpacing;
-        }
+        rackHoleProperties.forEach(prop => {
+          const capProp = prop.charAt(0).toUpperCase() + prop.slice(1);
+          const param = this.$route.query[`rackHole${capProp}`];
+          if (param) {
+            this.rackHoleDimensions[prop] = param;
+          }
+        });
 
         const rackHoleData = this.$route.query.rackHoleData;
         if (rackHoleData) {
