@@ -46,15 +46,15 @@
         <br />
 
         <label for="rackNotches" class="not-implemented">Rack holes are open notches (not implemented): </label>
-        <input id="rackNotches" v-model="rackHoleDimensions.notches" type="checkbox" :disabled="rackHoleDimensions.circular" />
+        <input id="rackNotches" v-model="rackHoleDimensions.notches" type="checkbox" :disabled="true || rackHoleDimensions.circular" />
         <br />
 
         <label for="rackNotchRadiusCorners" class="not-implemented">Radius corners of rack notches (not implemented): </label>
-        <input id="rackNotchRadiusCorners" v-model="rackHoleDimensions.notchRadiusCorners" type="checkbox" :disabled="!rackHoleDimensions.notches || rackHoleDimensions.circular" />
+        <input id="rackNotchRadiusCorners" v-model="rackHoleDimensions.notchRadiusCorners" type="checkbox" :disabled="true || !rackHoleDimensions.notches || rackHoleDimensions.circular" />
         <br />
 
         <label for="rackNotchCornerRadius" class="not-implemented">Rack notch corner radius (not implemented): </label>
-        <input id="rackNotchCornerRadius" v-model.number="rackHoleDimensions.notchCornerRadius" type="number" :disabled="!rackHoleDimensions.notches || !rackHoleDimensions.notchRadiusCorners || rackHoleDimensions.circular" />
+        <input id="rackNotchCornerRadius" v-model.number="rackHoleDimensions.notchCornerRadius" type="number" :disabled="true || !rackHoleDimensions.notches || !rackHoleDimensions.notchRadiusCorners || rackHoleDimensions.circular" />
         <br />
 
         <label for="rackHoleHorizontalSpacing">Rack hole horizontal spacing (center-to-center): </label>
@@ -198,12 +198,10 @@
 </template>
 
 <script>
-  import DxfDocument from '../Dxf/DxfDocument';
-  import DxfBlock from '../Dxf/DxfBlock';
+  import { DxfDocument, DxfBlock } from 'dxf-composer';
+  import { Helper } from 'dxf';
 
   import DxfUtils from '../DxfUtils';
-
-  import { Helper } from 'dxf';
 
   const defaultParams = {
     frontPanelWidth: 19,
@@ -769,9 +767,12 @@
 
         rackHoleProperties.forEach(prop => {
           const capProp = prop.charAt(0).toUpperCase() + prop.slice(1);
-          const param = this.$route.query[`rackHole${capProp}`];
-          if (param) {
-            this.rackHoleDimensions[prop] = param;
+          const queryValue = this.$route.query[`rackHole${capProp}`];
+          if (queryValue) {
+            const valueAsNumber = Number.parseFloat(queryValue);
+            if (!Number.isNaN(valueAsNumber)) {
+              this.rackHoleDimensions[prop] = queryValue;
+            }
           }
         });
 

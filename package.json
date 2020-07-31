@@ -1,6 +1,7 @@
 {
   "name": "rackmount-enclosure-calculator",
   "version": "0.1.0",
+  "license": "UNLICENSED",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -9,7 +10,8 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "dxf": "^4.4.1",
+    "dxf": "^4.4.2",
+    "dxf-composer": "file:../dxf-composer",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0"
   },
