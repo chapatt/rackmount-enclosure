@@ -226,8 +226,8 @@
     angleThickness: 1 / 16,
     verticalAngleLeg: 1 / 2,
     verticalAngleThickness: 1 / 16,
-    screwFreeFitDiameter: 1 / 8,
-    pemDiameter: 1 / 4,
+    screwFreeFitDiameter: 0.1285, // #4-40 free-fit
+    pemDiameter: 0.166, // PEM CLS-440-2
     hasHandles: false,
     handleHoleDiameter: 1 / 16,
     handleHoleSpacing: 1 + (1 / 4),
@@ -246,7 +246,7 @@
   const rackHolePresets = [
     {
       name: '19-inch, 1U',
-      diameter: 0.25,
+      diameter: 0.228,
       circular: false,
       eccentricity: 0.125,
       notches: false,
@@ -260,7 +260,7 @@
     },
     {
       name: '19-inch, 2U',
-      diameter: 0.25,
+      diameter: 0.228,
       circular: false,
       eccentricity: 0.125,
       notches: false,
@@ -274,7 +274,7 @@
     },
     {
       name: '19-inch, 2U, 8 holes',
-      diameter: 0.25,
+      diameter: 0.228,
       circular: false,
       eccentricity: 0.125,
       notches: false,
@@ -290,9 +290,9 @@
     },
     {
       name: '500 Series, 1U',
-      diameter: 0.25,
-      circular: false,
-      eccentricity: 0.125,
+      diameter: 0.1285,
+      circular: true,
+      eccentricity: 0,
       notches: false,
       notchRadiusCorners: true,
       notchCornerRadius: 0.0625,
@@ -312,14 +312,17 @@
         svgString: null,
         drawingSpacing: 1,
         rackHoleDimensions: {
-          diameter: 0.25,
+          diameter: 0.228,
           circular: false,
           eccentricity: 0.125,
           notches: false,
           notchRadiusCorners: true,
           notchCornerRadius: 0.0625,
           horizontalSpacing: 18.312,
-          data: [],
+          data: [
+            { spaceBelow: 1.25 },
+            { spaceBelow: 0 },
+          ],
         },
         ...defaultParams,
       };
