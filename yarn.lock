@@ -3053,8 +3053,10 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-"dxf-composer@file:../dxf-composer":
-  version "0.1.0"
+dxf-composer@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/dxf-composer/-/dxf-composer-0.1.2.tgz#68729bc3b3a5c2958ffc9c9fc14158d543372fa0"
+  integrity sha512-wM8ktoSWcarFBKoRZCK71nsDEMXY2WzWO5swCXUV8WtW5LE4Q8H8qRRr/50mlTgXHiOPiA2zzbPK+fBzESZDYA==
 
 dxf@^4.4.2:
   version "4.4.2"
