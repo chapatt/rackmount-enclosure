@@ -304,7 +304,7 @@
   ];
 
   export default {
-    name: 'App',
+    name: 'Calculator',
     data: function () {
       return {
         url: window.location,
