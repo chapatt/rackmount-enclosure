@@ -305,7 +305,7 @@
 
   export default {
     name: 'Calculator',
-    data: function () {
+    data() {
       return {
         url: window.location,
         dxfString: null,
@@ -328,127 +328,127 @@
       };
     },
     computed: {
-      frontPanelEdgeToBody: function () {
+      frontPanelEdgeToBody() {
         return (this.frontPanelHeight - this.height) /2;
       },
-      frontPanelEndToBodyInside: function () {
+      frontPanelEndToBodyInside() {
         return (this.frontPanelWidth - this.topWidth) / 2;
       },
-      frontPanelTopEdgeToHole: function () {
+      frontPanelTopEdgeToHole() {
         return this.sideTopEdgeToHole + this.frontPanelEdgeToBody;
       },
-      frontPanelBottomEdgeToHole: function () {
+      frontPanelBottomEdgeToHole() {
         return this.sideBottomEdgeToHole + this.frontPanelEdgeToBody;
       },
-      frontPanelTopEdgeToCornerHole: function () {
+      frontPanelTopEdgeToCornerHole() {
         return this.hasHandles ? (this.frontPanelHeight - this.handleHoleSpacing) / 2 : this.frontPanelTopEdgeToHole;
       },
-      frontPanelBottomEdgeToCornerHole: function () {
+      frontPanelBottomEdgeToCornerHole() {
         return this.hasHandles ? (this.frontPanelHeight - this.handleHoleSpacing) / 2 : this.frontPanelBottomEdgeToHole;
       },
-      frontPanelCornerHoleDiameter: function () {
+      frontPanelCornerHoleDiameter() {
         return this.hasHandles ? this.handleHoleDiameter : this.screwFreeFitDiameter;
       },
-      cornerHoleWidth: function () {
+      cornerHoleWidth() {
         return this.rearPanelWidth - (2 * (this.verticalAngleThickness + (this.verticalAngleLeg / 2)));
       },
-      frontPanelEndToCornerHole: function () {
+      frontPanelEndToCornerHole() {
         return (this.frontPanelWidth - this.cornerHoleWidth) / 2;
       },
-      sideDepth: function () {
+      sideDepth() {
         return this.depth - this.frontPanelThickness;
       },
-      sideTopEdgeToHole: function () {
+      sideTopEdgeToHole() {
         return this.topThickness + (this.angleVerticalLeg / 2);
       },
-      sideBottomEdgeToHole: function () {
+      sideBottomEdgeToHole() {
         return this.bottomThickness + (this.angleVerticalLeg / 2);
       },
-      sideEndToFrontCornerHole: function () {
+      sideEndToFrontCornerHole() {
         return this.sideRailEndToFrontCornerHole;
       },
-      sideEndToRearCornerHole: function () {
+      sideEndToRearCornerHole() {
         return this.sideRailEndToRearCornerHole + this.rearPanelThickness;
       },
-      rearPanelWidth: function () {
+      rearPanelWidth() {
         return this.width - (2 * this.sideThickness);
       },
-      rearPanelTopEdgeToHole: function () {
+      rearPanelTopEdgeToHole() {
         return this.sideTopEdgeToHole;
       },
-      rearPanelBottomEdgeToHole: function () {
+      rearPanelBottomEdgeToHole() {
         return this.sideBottomEdgeToHole;
       },
-      rearPanelEndToCornerHole: function () {
+      rearPanelEndToCornerHole() {
         return (this.rearPanelWidth - this.cornerHoleWidth) / 2;
       },
-      topWidth: function () {
+      topWidth() {
         return this.rearPanelWidth;
       },
-      topDepth: function () {
+      topDepth() {
         return this.depth - (this.frontPanelThickness + this.rearPanelThickness);
       },
-      bottomWidth: function () {
+      bottomWidth() {
         return this.rearPanelWidth;
       },
-      bottomDepth: function () {
+      bottomDepth() {
         return this.topDepth;
       },
-      sideRailDepth: function () {
+      sideRailDepth() {
         return this.topDepth;
       },
-      frontRailWidth: function () {
+      frontRailWidth() {
         return this.frontFullRails ? this.rearPanelWidth : this.frontPartialRailWidth;
       },
-      frontRailCornerHoleDiameter: function () {
+      frontRailCornerHoleDiameter() {
         return this.frontFullRails ? this.screwFreeFitDiameter : this.pemDiameter;
       },
-      rearRailWidth: function () {
+      rearRailWidth() {
         return this.rearFullRails ? this.rearPanelWidth : this.rearPartialRailWidth;
       },
-      rearRailCornerHoleDiameter: function () {
+      rearRailCornerHoleDiameter() {
         return this.rearFullRails ? this.screwFreeFitDiameter : this.pemDiameter;
       },
-      sideRailEndToFrontCornerHole: function () {
+      sideRailEndToFrontCornerHole() {
         return (this.verticalAngleLeg / 2) + (this.frontFullRails ? this.angleThickness : 0);
       },
-      sideRailEndToRearCornerHole: function () {
+      sideRailEndToRearCornerHole() {
         return (this.verticalAngleLeg / 2) + (this.rearFullRails ? this.angleThickness : 0);
       },
-      cornerBracketHeight: function () {
+      cornerBracketHeight() {
         return this.height - ((2 * this.angleThickness) + this.topThickness + this.bottomThickness);
       },
-      frontRailEndToCornerHole: function () {
+      frontRailEndToCornerHole() {
         return (this.verticalAngleLeg / 2) + (this.frontFullRails ? this.angleThickness : 0);
       },
-      rearRailEndToCornerHole: function () {
+      rearRailEndToCornerHole() {
         return (this.verticalAngleLeg / 2) + (this.rearFullRails ? this.angleThickness : 0);
       },
-      frontRailEdgeToCornerHole: function () {
+      frontRailEdgeToCornerHole() {
         return this.hasHandles ? ((this.height - (this.topThickness + this.bottomThickness)) - this.handleHoleSpacing) / 2 : this.verticalAngleLeg / 2;
       },
-      frontCornerBracketEndToHole: function () {
+      frontCornerBracketEndToHole() {
         return this.frontRailEdgeToCornerHole - this.angleThickness;
       },
-      cornerBracketEndToHole: function () {
+      cornerBracketEndToHole() {
         return (this.verticalAngleLeg / 2) - this.angleThickness;
       },
-      frontCornerBracketFrontLegHoleDiameter: function () {
+      frontCornerBracketFrontLegHoleDiameter() {
         return this.hasHandles ? this.handleHoleDiameter : this.pemDiameter;
       },
-      earWidth: function () {
+      earWidth() {
         return (this.frontPanelWidth - this.width) / 2;
       },
-      topFrontToOneQuarter: function () {
+      topFrontToOneQuarter() {
         return this.topDepth / 4;
       },
-      topSideToOneQuarter: function () {
+      topSideToOneQuarter() {
         return this.topWidth / 4;
       },
-      topSideToFrontRailEnd: function () {
+      topSideToFrontRailEnd() {
         return (this.topWidth - this.frontRailWidth) / 2;
       },
-      topSideToRearRailEnd: function () {
+      topSideToRearRailEnd() {
         return (this.topWidth - this.rearRailWidth) / 2;
       },
     },
