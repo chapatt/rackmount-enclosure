@@ -187,10 +187,10 @@
     <input v-model="url" type="text" readonly />
     <button v-on:click="initDefaultParams()">Reset</button>
 
+    <br />
+
     <button v-on:click="generateDrawing()">Generate Drawing</button>
-
     <button v-on:click="downloadDxf()" :disabled="!dxfString">Download DXF</button>
-
     <button v-on:click="downloadSvg()" :disabled="!svgString">Download SVG</button>
 
     <div v-html="svgString" class="dxf-view" />
