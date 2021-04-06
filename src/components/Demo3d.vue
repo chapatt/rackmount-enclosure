@@ -1,5 +1,29 @@
 <template>
-  <div class="demo-3d" ref="container" />
+  <div>
+    <div class="demo-3d" ref="container" />
+    <table>
+      <thead>
+        <tr v-if="screws.length > 0">
+          <th>Part</th>
+          <th>Visibility</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-if="screws.objects.length > 0">
+          <td>Screws</td>
+          <td><input type="checkbox" :checked="screws.visibility" @change="toggleVisibility(screws)" /></td>
+        </tr>
+        <tr v-if="pems.objects.length > 0">
+          <td>PEMs</td>
+          <td><input type="checkbox" :checked="pems.visibility" @change="toggleVisibility(pems)" /></td>
+        </tr>
+        <tr v-for="(objectGroup, i) in namedObjects" :key="`named${i}`">
+          <td>{{ objectGroup.objects[0].name }}</td>
+          <td><input type="checkbox" :checked="objectGroup.visibility" @change="toggleVisibility(objectGroup)" /></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
@@ -18,6 +42,19 @@
 
   export default {
     name: 'Demo3d',
+    data() {
+      return {
+        screws: {
+          objects: [],
+          visibility: true,
+        },
+        pems: {
+          objects: [],
+          visibility: true,
+        },
+        namedObjects: [],
+      }
+    },
     methods: {
       animate() {
         requestAnimationFrame(this.animate);
@@ -25,10 +62,24 @@
       },
       populateObjectSelector(gltf) {
         gltf.scene.traverse(child => {
-          console.log('got a child!');
           if (child instanceof Mesh) {
-            console.log(`${child.name} was a Mesh!`);
+            if (/Screw/g.exec(child.name)) {
+              this.screws.objects.push(child);
+            } else if (/Pem/g.exec(child.name)) {
+              this.pems.objects.push(child);
+            } else {
+              this.namedObjects.push({
+                objects: [child],
+                visibility: true,
+              });
+            }
           }
+        });
+      },
+      toggleVisibility(objectGroup) {
+        objectGroup.visibility = !objectGroup.visibility;
+        objectGroup.objects.forEach(object => {
+          object.visible = objectGroup.visibility;
         });
       },
     },
