@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <div class="demo-3d" ref="container" />
-    <table>
+  <div class="demo-3d">
+    <div class="viewport" ref="viewport" />
+    <table class="objectSelector">
       <thead>
         <tr v-if="screws.length > 0">
           <th>Part</th>
@@ -61,6 +61,7 @@
         this.renderer.render(this.scene, this.camera);
       },
       populateObjectSelector(gltf) {
+        let pendingLayout = false;
         gltf.scene.traverse(child => {
           if (child instanceof Mesh) {
             if (/Screw/g.exec(child.name)) {
@@ -74,6 +75,13 @@
               });
             }
           }
+          if (!pendingLayout) {
+            pendingLayout = true;
+            window.requestAnimationFrame(() => {
+              pendingLayout = false;
+              this.layoutViewport();
+            });
+          }
         });
       },
       toggleVisibility(objectGroup) {
@@ -82,13 +90,20 @@
           object.visible = objectGroup.visibility;
         });
       },
+      layoutViewport() {
+        this.camera.aspect = this.$refs.viewport.offsetWidth / this.$refs.viewport.offsetHeight,
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(this.$refs.viewport.offsetWidth, this.$refs.viewport.offsetHeight);
+      },
     },
     mounted() {
+      window.addEventListener('resize', this.layoutViewport.bind(this));
+
       this.scene = new Scene();
 
       this.camera = new PerspectiveCamera(
         40,
-        this.$refs.container.offsetWidth / this.$refs.container.offsetHeight,
+        this.$refs.viewport.offsetWidth / this.$refs.viewport.offsetHeight,
         0.001,
         2000
       );
@@ -105,7 +120,7 @@
       this.scene.add(ambientLight);
 
       this.renderer = new WebGLRenderer({antialias: true, alpha: true});
-      this.renderer.setSize(this.$refs.container.offsetWidth, this.$refs.container.offsetHeight);
+      this.renderer.setSize(this.$refs.viewport.offsetWidth, this.$refs.viewport.offsetHeight);
       this.renderer.setPixelRatio(window.devicePixelRatio);
 
       this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -125,7 +140,32 @@
 
       this.animate();
 
-      this.$refs.container.appendChild(this.renderer.domElement);
+      this.$refs.viewport.appendChild(this.renderer.domElement);
     },
   }
 </script>
+
+<style scoped>
+  .demo-3d {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .viewport {
+    flex-grow: 1;
+    background: linear-gradient(#382c7a, #9690b8);
+    overflow: hidden;
+  }
+
+  .objectSelector {
+    flex-shrink: 0;
+    width: fit-content;
+    overflow-y: scroll;
+    display: block;
+  }
+
+  .objectSelector td, .objectSelector th {
+    padding: 0.2em;
+  }
+</style>

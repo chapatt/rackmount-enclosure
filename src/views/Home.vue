@@ -22,9 +22,6 @@
     font-family: sans-serif;
   }
   .demo-3d {
-    width: 40em;
     height: 30em;
-    overflow: hidden;
-    background: linear-gradient(#382c7a, #9690b8);
   }
 </style>
