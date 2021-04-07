@@ -425,13 +425,13 @@
         return (this.verticalAngleLeg / 2) + (this.rearFullRails ? this.angleThickness : 0);
       },
       frontRailEdgeToCornerHole() {
-        return this.hasHandles ? ((this.height - (this.topThickness + this.bottomThickness)) - this.handleHoleSpacing) / 2 : this.verticalAngleLeg / 2;
+        return this.hasHandles ? ((this.height - (this.topThickness + this.bottomThickness)) - this.handleHoleSpacing) / 2 : this.angleVerticalLeg / 2;
       },
       frontCornerBracketEndToHole() {
         return this.frontRailEdgeToCornerHole - this.angleThickness;
       },
       cornerBracketEndToHole() {
-        return (this.verticalAngleLeg / 2) - this.angleThickness;
+        return (this.angleVerticalLeg / 2) - this.angleThickness;
       },
       frontCornerBracketFrontLegHoleDiameter() {
         return this.hasHandles ? this.handleHoleDiameter : this.pemDiameter;
