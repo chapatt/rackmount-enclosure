@@ -154,7 +154,7 @@
 
   .viewport {
     flex-grow: 1;
-    background: linear-gradient(#382c7a, #9690b8);
+    background: linear-gradient(#333365, #9797aa);
     overflow: hidden;
   }
 
