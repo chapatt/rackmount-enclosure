@@ -1,35 +1,36 @@
 <template>
   <div class="demo-3d">
     <div class="viewport" ref="viewport" />
-    <table class="objectSelector">
-      <thead>
-        <tr v-if="screws.length > 0">
-          <th>Part</th>
-          <th>Visibility</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="screws.objects.length > 0">
-          <td>Screws</td>
-          <td><input type="checkbox" :checked="screws.visibility" @change="toggleVisibility(screws)" /></td>
-        </tr>
-        <tr v-if="pems.objects.length > 0">
-          <td>PEMs</td>
-          <td><input type="checkbox" :checked="pems.visibility" @change="toggleVisibility(pems)" /></td>
-        </tr>
-        <tr v-for="(objectGroup, i) in namedObjects" :key="`named${i}`">
-          <td>{{ objectGroup.objects[0].name }}</td>
-          <td><input type="checkbox" :checked="objectGroup.visibility" @change="toggleVisibility(objectGroup)" /></td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="objectSelector">
+      <table>
+        <thead>
+          <tr>
+            <th>Part</th>
+            <th>Visibility</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-if="screws.objects.length > 0">
+            <td>Screws</td>
+            <td><input type="checkbox" :checked="screws.visibility" @change="toggleVisibility(screws)" /></td>
+          </tr>
+          <tr v-if="pems.objects.length > 0">
+            <td>PEMs</td>
+            <td><input type="checkbox" :checked="pems.visibility" @change="toggleVisibility(pems)" /></td>
+          </tr>
+          <tr v-for="(objectGroup, i) in namedObjects" :key="`named${i}`">
+            <td>{{ objectGroup.objects[0].name }}</td>
+            <td><input type="checkbox" :checked="objectGroup.visibility" @change="toggleVisibility(objectGroup)" /></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
 <script>
   import {
     AmbientLight,
-    HemisphereLight,
     Mesh,
     PerspectiveCamera,
     PointLight,
@@ -109,14 +110,11 @@
       );
       this.camera.position.set(0.5,0.6,0.8);
 
-      this.light = new HemisphereLight(0xffffff, 0x080808, 1);
-      this.scene.add(this.light);
-
       const pointLight = new PointLight(0xffffff, 0.4);
       pointLight.position.set(10, 10, 10);
       this.scene.add(pointLight);
 
-      const ambientLight = new AmbientLight(0xbbbbbb);
+      const ambientLight = new AmbientLight(0xffffff, 1);
       this.scene.add(ambientLight);
 
       this.renderer = new WebGLRenderer({antialias: true, alpha: true});
@@ -150,6 +148,7 @@
     display: flex;
     flex-direction: row;
     align-items: stretch;
+    height: 30em;
   }
 
   .viewport {
@@ -160,12 +159,42 @@
 
   .objectSelector {
     flex-shrink: 0;
-    width: fit-content;
     overflow-y: scroll;
+    box-sizing: border-box;
+    padding: 1em;
+    background-color: #eeeeee;
+  }
+
+  .objectSelector table {
+    width: fit-content;
     display: block;
   }
 
   .objectSelector td, .objectSelector th {
     padding: 0.2em;
+  }
+
+  .objectSelector td:nth-child(2) {
+    text-align: center;
+  }
+
+  @media (orientation: portrait) {
+    .demo-3d {
+      flex-direction: column;
+      height: auto;
+    }
+
+    .viewport {
+      height: 30em;
+    }
+
+    .objectSelector {
+      flex-grow: 1;
+    }
+
+    .objectSelector table {
+      display: table;
+      width: 100%;
+    }
   }
 </style>

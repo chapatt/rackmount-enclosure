@@ -798,38 +798,47 @@
   }
 </script>
 
-<style>
+<style scoped>
   html {
     font-family: sans-serif;
   }
+
   input, fieldset, label, button, select {
     margin: 0.5em 0;
   }
+
   fieldset, .dxf-view {
     border-width: 2px;
     border-color: darkgray;
     border-style: solid;
   }
+
   label.not-implemented {
     color: #888;
   }
+
   input, button {
     margin-right: 1em;
   }
+
   button, .dxf-view {
     margin-bottom: 1em;
   }
+
   .dxf-view {
     height: 30em;
     padding: 1em;
   }
+
   .space {
     display: flex;
     flex-direction: row;
   }
+
   .space input {
     align-self: center;
   }
+
   .space-symbol {
     align-self: stretch;
     margin-right: 0.5em;
@@ -838,6 +847,7 @@
     align-items: stretch;
     border-collapse: collapse;
   }
+
   .space-symbol div {
     width: 0.2em;
     border-style: solid;

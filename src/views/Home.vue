@@ -21,7 +21,11 @@
   html {
     font-family: sans-serif;
   }
+
   .demo-3d {
-    height: 30em;
+    width: 100%;
+  }
+
+  .demo-3d .viewport {
   }
 </style>
