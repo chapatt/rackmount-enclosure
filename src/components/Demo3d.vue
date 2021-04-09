@@ -174,6 +174,12 @@
     padding: 0.2em;
   }
 
+  .objectSelector th {
+    border-bottom-style: solid;
+    border-bottom-width: 0.1em;
+    border-bottom-color: #cccccc;
+  }
+
   .objectSelector td:nth-child(2) {
     text-align: center;
   }
