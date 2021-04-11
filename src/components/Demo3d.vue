@@ -1,5 +1,14 @@
 <template>
   <div class="demo-3d">
+    <div class="loading-overlay" v-if="loading">
+      Loading {{ loadedBytes }}/{{ totalBytes }} bytes
+      <div class="progress-bar">
+        <div
+          class="bar"
+          :style="`width: ${(loadedBytes / totalBytes) * 100}%`"
+        ></div>
+      </div>
+    </div>
     <div class="viewport" ref="viewport" />
     <div class="objectSelector">
       <table>
@@ -45,6 +54,10 @@
     name: 'Demo3d',
     data() {
       return {
+        loading: true,
+        error: null,
+        loadedBytes: 0,
+        totalBytes: 0,
         screws: {
           objects: [],
           visibility: true,
@@ -129,11 +142,12 @@
       loader.load(
         'enclosure.glb',
         gltf => {
+          this.loading = false;
           this.scene.add(gltf.scene);
           this.populateObjectSelector(gltf);
         },
-        undefined,
-        error => console.error(error),
+        ({loaded, total}) => {this.loadedBytes = loaded; this.totalBytes = total},
+        error => {this.error = error}
       );
 
       this.animate();
@@ -149,6 +163,28 @@
     flex-direction: row;
     align-items: stretch;
     height: 30em;
+    position: relative;
+  }
+
+  .loading-overlay {
+    background-color: #eeeeee;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .progress-bar {
+    width: 50%;
+    height: 1em;
+    border-style: solid;
+    border-width: 0.1em;
+  }
+
+  .progress-bar .bar {
+    height: 100%;
+    background-color: black;
   }
 
   .viewport {
