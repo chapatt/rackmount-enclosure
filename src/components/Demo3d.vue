@@ -115,7 +115,8 @@
       },
     },
     mounted() {
-      window.addEventListener('resize', this.layoutViewport.bind(this));
+      this.resizeListener = this.layoutViewport.bind(this);
+      window.addEventListener('resize', this.resizeListener);
 
       this.scene = new Scene();
 
@@ -158,6 +159,9 @@
 
       this.$refs.viewport.appendChild(this.renderer.domElement);
     },
+    destroyed() {
+      window.removeEventListener('resize', this.resizeListener);
+    }
   }
 </script>
 
