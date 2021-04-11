@@ -28,7 +28,7 @@
             <td><input type="checkbox" :checked="pems.visibility" @change="toggleVisibility(pems)" /></td>
           </tr>
           <tr v-for="(objectGroup, i) in namedObjects" :key="`named${i}`">
-            <td>{{ objectGroup.objects[0].name }}</td>
+            <td>{{ formatObjectName(objectGroup.objects[0].name) }}</td>
             <td><input type="checkbox" :checked="objectGroup.visibility" @change="toggleVisibility(objectGroup)" /></td>
           </tr>
         </tbody>
@@ -97,6 +97,10 @@
             });
           }
         });
+      },
+      formatObjectName(name) {
+        const words = name.match(/([A-Z]+[a-z]*)+?/g);
+        return words.reduce((acc, word) => `${acc} ${word.toLowerCase()}`)
       },
       toggleVisibility(objectGroup) {
         objectGroup.visibility = !objectGroup.visibility;
