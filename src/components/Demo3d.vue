@@ -1,7 +1,7 @@
 <template>
   <div class="demo-3d">
     <div class="loading-overlay" v-if="loading">
-      Loading {{ loadedBytes }}/{{ totalBytes }} bytes
+      <p>Loading {{ loadedBytes }}/{{ totalBytes }} bytes</p>
       <div class="progress-bar">
         <div
           class="bar"
@@ -181,6 +181,10 @@
     left: 0;
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   .progress-bar {
