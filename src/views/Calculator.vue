@@ -1,5 +1,6 @@
 <template>
   <div id="calculator">
+    <router-link to="/">Home</router-link>
     <fieldset>
       <legend>Front Panel</legend>
 
