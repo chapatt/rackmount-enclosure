@@ -109,7 +109,7 @@
         });
       },
       layoutViewport() {
-        this.camera.aspect = this.$refs.viewport.offsetWidth / this.$refs.viewport.offsetHeight,
+        this.camera.aspect = this.$refs.viewport.offsetWidth / this.$refs.viewport.offsetHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(this.$refs.viewport.offsetWidth, this.$refs.viewport.offsetHeight);
       },
@@ -128,10 +128,10 @@
       this.camera.position.set(0.5,0.6,0.8);
 
       const pointLight = new PointLight(0xffffff, 0.4);
-      pointLight.position.set(10, 10, 10);
+      pointLight.position.set(3, 20, 10);
       this.scene.add(pointLight);
 
-      const ambientLight = new AmbientLight(0xffffff, 1);
+      const ambientLight = new AmbientLight(0xffffff, 1.2);
       this.scene.add(ambientLight);
 
       this.renderer = new WebGLRenderer({antialias: true, alpha: true});
