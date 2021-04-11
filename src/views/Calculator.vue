@@ -101,6 +101,8 @@
     <fieldset>
       <legend>General Dimensions</legend>
 
+      <p>Outer dimensions of the box (the front panel can extend past this).</p>
+
       <label for="width">Width: </label>
       <input id="width" v-model.number="width" type="number" />
       <br />
