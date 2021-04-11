@@ -795,6 +795,9 @@
       // Expose this const for use in the template
       this.rackHolePresets = rackHolePresets;
     },
+    mounted() {
+      this.generateDrawing();
+    },
   }
 </script>
 
