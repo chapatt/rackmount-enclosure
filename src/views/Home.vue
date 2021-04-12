@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import Demo3d from '../components/Demo3d';
+  import Demo3d from '@/components/Demo3d';
 
   export default {
     name: 'Home',

@@ -1,13 +1,8 @@
 <template>
   <div class="demo-3d">
     <div class="loading-overlay" v-if="loading">
-      <p>Loading {{ loadedBytes }}/{{ totalBytes }} bytes</p>
-      <div class="progress-bar">
-        <div
-          class="bar"
-          :style="`width: ${(loadedBytes / totalBytes) * 100}%`"
-        ></div>
-      </div>
+      <p>Loading {{ loadedBytes }}{{ totalBytes ? ` / ${totalBytes}` : '' }} bytes</p>
+      <progress-bar v-if="totalBytes" :progress="loadedBytes / totalBytes" />
     </div>
     <div class="viewport" ref="viewport" />
     <div class="objectSelector">
@@ -49,9 +44,13 @@
   } from 'three';
   import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
   import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
+  import ProgressBar from "@/components/ProgressBar";
 
   export default {
     name: 'Demo3d',
+    components: {
+      ProgressBar,
+    },
     data() {
       return {
         loading: true,
@@ -194,8 +193,7 @@
     border-width: 0.1em;
   }
 
-  .progress-bar .bar {
-    height: 100%;
+  /deep/ .progress-bar .bar {
     background-color: black;
   }
 

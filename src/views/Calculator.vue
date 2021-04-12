@@ -196,7 +196,7 @@
     <button v-on:click="downloadDxf()" :disabled="!dxfString">Download DXF</button>
     <button v-on:click="downloadSvg()" :disabled="!svgString">Download SVG</button>
 
-    <div v-html="svgString" class="dxf-view" />
+    <div v-html="svgString" class="dxf-view" ref="dxfView" />
   </div>
 </template>
 
@@ -803,7 +803,7 @@
       this.generateDrawing();
 
       this.$nextTick(() => {
-        const svgEl = this.$el.getElementsByClassName('dxf-view')[0].getElementsByTagName('svg')[0];
+        const svgEl = this.$refs.dxfView.getElementsByTagName('svg')[0];
         this.panzoom = panzoom(svgEl);
       });
     },
