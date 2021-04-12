@@ -203,6 +203,7 @@
 <script>
   import { DxfDocument, DxfBlock } from 'dxf-composer';
   import { Helper } from 'dxf';
+  import panzoom from 'panzoom';
 
   import DxfUtils from '../DxfUtils';
 
@@ -800,7 +801,15 @@
     },
     mounted() {
       this.generateDrawing();
+
+      this.$nextTick(() => {
+        const svgEl = this.$el.getElementsByClassName('dxf-view')[0].getElementsByTagName('svg')[0];
+        this.panzoom = panzoom(svgEl);
+      });
     },
+    destroyed() {
+      this.panzoom.dispose();
+    }
   }
 </script>
 
@@ -834,6 +843,7 @@
   .dxf-view {
     height: 30em;
     padding: 1em;
+    overflow: hidden;
   }
 
   .space {
