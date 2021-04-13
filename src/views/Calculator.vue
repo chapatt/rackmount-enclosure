@@ -754,7 +754,7 @@
 
         const rackHoleDataQueryParam = this.rackHoleDimensions.data.map(({ spaceBelow }) => spaceBelow).join(',');
 
-        this.url = location.protocol + '//' + location.host + location.pathname
+        this.url = location.protocol + '//' + location.host + location.pathname + location.hash.split('?')
           + `?${queryString}`
           + ((this.rackHoleDimensions.data.length > 0) ? `&rackHoleData=${rackHoleDataQueryParam}` : '');
       },
