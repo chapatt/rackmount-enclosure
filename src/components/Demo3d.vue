@@ -131,7 +131,7 @@
       pointLight.position.set(3, 20, 10);
       this.scene.add(pointLight);
 
-      const ambientLight = new AmbientLight(0xffffff, 1.2);
+      const ambientLight = new AmbientLight(0xffffff, 0.8);
       this.scene.add(ambientLight);
 
       this.renderer = new WebGLRenderer({antialias: true, alpha: true});
