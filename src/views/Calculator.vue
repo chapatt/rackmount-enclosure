@@ -1,6 +1,9 @@
 <template>
   <div id="calculator">
-    <router-link to="/">Home</router-link>
+    <h1>Rackmount Enclosure</h1>
+    <h2>
+      <router-link to="/">3D Demo</router-link>
+    </h2>
     <fieldset>
       <legend>Front Panel</legend>
 
