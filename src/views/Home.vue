@@ -1,6 +1,5 @@
 <template>
   <div id="home">
-    <h1>Rackmount Enclosure</h1>
     <h2>
       <router-link to="calculator">Drawing Generator - Customize, render, and share your design as a DXF or URL</router-link>
     </h2>

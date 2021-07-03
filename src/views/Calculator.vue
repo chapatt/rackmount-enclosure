@@ -1,6 +1,5 @@
 <template>
   <div id="calculator">
-    <h1>Rackmount Enclosure</h1>
     <h2>
       <router-link to="/">3D Demo</router-link>
     </h2>
