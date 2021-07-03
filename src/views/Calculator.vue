@@ -725,8 +725,13 @@
         dxfDocument.firstHandle = 31;
         this.dxfString = dxfDocument.toString();
 
+        this.panzoom && this.panzoom.dispose();
         const helper = new Helper(this.dxfString);
         this.svgString = helper.toSVG();
+        this.$nextTick(() => {
+          const svgEl = this.$refs.dxfView.getElementsByTagName('svg')[0];
+          this.panzoom = panzoom(svgEl);
+        });
       },
       downloadDxf() {
         this.downloadText('drawing.dxf', this.dxfString);
@@ -801,11 +806,6 @@
     },
     mounted() {
       this.generateDrawing();
-
-      this.$nextTick(() => {
-        const svgEl = this.$refs.dxfView.getElementsByTagName('svg')[0];
-        this.panzoom = panzoom(svgEl);
-      });
     },
     destroyed() {
       this.panzoom.dispose();
